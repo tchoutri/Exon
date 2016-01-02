@@ -4,7 +4,11 @@ defmodule Exon.PageController do
   alias Exon.{Endpoint, QRCode}
 
   def index(conn, _params) do
-    render conn, "index.html"
+    render(conn, "index.html")
+  end
+
+  def about(conn, _params) do
+    render(conn, "about.html")
   end
 
   def id(conn, %{"id" => id}) do

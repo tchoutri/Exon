@@ -17,8 +17,9 @@ defmodule Exon.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
-    get "/id/:id", PageController, :id
-    get "/id/:id/qrcode", PageController, :qrcode
+    get "/about", PageController, :about
+    get "/item/:id", PageController, :id # *TODO* : This should not return raw JSON.
+    get "/item/:id/qrcode", PageController, :qrcode
   end
 
   scope "/form", Exon do

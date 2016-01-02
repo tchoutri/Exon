@@ -1,0 +1,10 @@
+    <div class="container">
+
+      <div class="starter-template">
+        <h1>About</h1>
+        <p class="lead">
+        Exon is heavily inspired by a tool called “on-on” which was conceived to act as a quick-and-dirty database to gather informations about the stuff lying
+        around in a hackerspace.<br />
+        However, due to my inability to read C++, I had to create another protocol to talk to the server. And this led to Exon.
+        </p>
+      </div>
