@@ -1,0 +1,30 @@
+<form class="form-horizontal">
+<fieldset>
+
+<h2>Register an item</h2>
+
+<div class="form-group">
+  <label class="col-md-4 control-label" for="name">Name</label>
+  <div class="col-md-4">
+  <input id="name" name="name" type="text" placeholder="Fusion engine" class="form-control input-md" required="">
+  <span class="help-block">Name your item.</span>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-md-4 control-label" for="textinput">Additional Notes</label>  
+  <div class="col-md-4">
+  <input id="textinput" name="textinput" type="text" placeholder="May explode atsome point." class="form-control input-md" required="">
+  <span class="help-block">A comment is mandatory.</span>
+  </div>
+</div>
+<div class="form-group">
+  <label class="col-md-4 control-label" for="singlebutton"></label>
+  <div class="col-md-4">
+    <button id="singlebutton" class="btn btn-primary">Register</button>
+  </div>
+</div>
+
+</fieldset>
+</form>
+

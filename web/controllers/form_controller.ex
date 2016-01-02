@@ -1,0 +1,23 @@
+defmodule Exon.FormController do
+  use Exon.Web, :controller
+  alias Exon.Form
+
+  def index(conn, %{"comments" => comments, "name" => name}) do
+    case Exon.Database.add_new_id(name, comments) do
+      {:ok, id} ->
+        conn |> put_flash(:info, "Item #{name} registered with id #{id}")
+             |> render("index.html")
+      {:duplicate, id} ->
+        conn |> put_flash(:error, "Item #{name} already exists, with id #{id}")
+             |> render("index.html")
+      _ ->
+        conn |> put_flash(:error, "Something went wrong.")
+             |> render("index.html")
+    end
+  end
+
+  def index(conn, _params) do
+    render(conn, "index.html")
+  end
+
+end
