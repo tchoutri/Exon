@@ -9,11 +9,11 @@ The specs are located [here](specs.md). Please tell me if something went wrong d
 
 ## About the server
 
-![Starting](starting.png)
+![Starting](http://i.imgur.com/8H4FoWk.png)
 
-![Home](home.png)
+![Home](http://i.imgur.com/ZOMapRf.png)
 
-![Form](form.png)
+![Form](http://i.imgur.com/Uc3IIiz.png)
 
 ### Running the server.
 
