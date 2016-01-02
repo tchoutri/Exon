@@ -15,6 +15,10 @@ The specs are located [here](specs.md). Please tell me if something went wrong d
 
 ![Form](http://i.imgur.com/Uc3IIiz.png)
 
+![Already Registered](http://i.imgur.com/IvzzlMN.png)
+
+![New Item](http://i.imgur.com/7ZoedQb.png)
+
 ### Running the server.
 
 (export MIX_ENV=prod)

@@ -14,7 +14,7 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="textinput">Additional Notes</label>  
   <div class="col-md-4">
-  <input id="textinput" name="textinput" type="text" placeholder="May explode at some point." class="form-control input-md" required="">
+  <input id="textinput" name="comments" type="text" placeholder="May explode at some point." class="form-control input-md" required="">
   <span class="help-block">A comment is mandatory.</span>
   </div>
 </div>
