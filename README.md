@@ -6,7 +6,6 @@ Exon is a “mess manager” developed in [Elixir](http://elixir-lang.org) and p
 ### About the clients
 The specs are located [here](specs.md). Please tell me if something went wrong during their implementation. <3.
 
-
 ## About the server
 
 ![Starting](http://i.imgur.com/8H4FoWk.png)
@@ -37,11 +36,10 @@ The specs are located [here](specs.md). Please tell me if something went wrong d
 - [x] Returning the ID of the newly-created entry in the database.
 - [x] Open an issue on sqlite_ecto about the modification of the :comments field
 - [x] Open an issue on Combine because it is not happy to receive some non-ASCII characters, such as “,”,Ë…
-
-### What should be done
-
 - [x] Organise the transition to SQlite
     - [x] Ability to add comments?
 - [x] Implement QRCode generation (I found the lib!)
     - [x] Don't forget 404 on non-existing items.
-    - [ ] Generating a unique key for each item in its URL.
+- [ ] Make it more CRUD
+    * For the moment, every comment and item are stored *ad vitam æternam*
+- [ ] A search functionality
