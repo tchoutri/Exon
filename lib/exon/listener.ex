@@ -6,20 +6,23 @@ use GenServer
 use Combine
 require Logger
 
-  def start_link(port) do
-    GenServer.start_link(__MODULE__, port, name: Listener)
+  def start_link do
+    GenServer.start_link(__MODULE__,[], name: Listener)
   end
 
-  def init(port) do
+  def init(_) do
+    port    = Application.get_env(:exon, :port)
     address = Application.get_env(:exon, :bindto)
     Logger.info(IO.ANSI.green <> "Listening on #{:inet.ntoa(address)} on port #{port}" <> IO.ANSI.reset)
-    spawn(fn -> listen(port) end)
-    {:ok, port}
+    case :gen_tcp.listen(port, [{:ip, address}, :binary, packet: :line, active: false, reuseaddr: true]) do
+      {:ok, lsocket} -> 
+        spawn(fn -> listen(lsocket) end)
+        {:ok, lsocket}
+      {:error, reason} -> {:stop, reason}
+    end
   end
 
-  def listen(port) do
-    address = Application.get_env(:exon, :bindto)
-    {:ok, lsocket} = :gen_tcp.listen(port, [{:ip, address}, :binary, packet: :line, active: false, reuseaddr: true])
+  def listen(lsocket) do
     accept(lsocket)
   end
 

@@ -12,7 +12,7 @@ require Logger
       supervisor(Exon.Endpoint, []),
       supervisor(Exon.Repo, []),
       worker(Exon.Server, [], restart: :permanent),
-      worker(Exon.Listener, [Application.get_env(:exon, :port)], restart: :permanent),
+      worker(Exon.Listener, [], restart: :permanent),
       worker(Exon.Database, [], restart: :permanent),
     ]
     supervise(children, strategy: :one_for_one)

@@ -1,6 +1,5 @@
 defmodule Exon.FormController do
   use Exon.Web, :controller
-  alias Exon.Form
 
   def index(conn, %{"comments" => comments, "name" => name}) do
     case Exon.Database.add_new_id(name, comments) do
@@ -19,5 +18,4 @@ defmodule Exon.FormController do
   def index(conn, _params) do
     render(conn, "index.html")
   end
-
 end
