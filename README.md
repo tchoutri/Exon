@@ -4,9 +4,9 @@ Exon 2 [![Elixir](https://cdn.rawgit.com/tchoutri/Exon/master/elixir.svg)](http:
 Exon is a “mess manager” developed in [Elixir](http://elixir-lang.org) and provides a simple API to manage & document your stuff.
 
 ### About the clients
-The specs are located [here](specs.md). Please tell me if something went wrong during their implementation. <3.
+The specs are located [here](specs.md). Please tell me if something went wrong during their implementation.
 
-## About the server
+### About the server
 
 ![Starting](http://i.imgur.com/8H4FoWk.png)
 
@@ -30,7 +30,6 @@ The specs are located [here](specs.md). Please tell me if something went wrong d
 
 - [ ] Writing tests.
 - [x] Returning the ID of the newly-created entry in the database.
-- [x] Open an issue on sqlite_ecto about the modification of the :comments field
 - [x] Open an issue on Combine because it is not happy to receive some non-ASCII characters, such as “,”,Ë…
 - [x] Organise the transition to SQlite
     - [x] Ability to add comments?
