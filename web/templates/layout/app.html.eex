@@ -10,6 +10,7 @@
     <title>Exon</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/exon.css") %>">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   </head>
 
   <body>
@@ -34,7 +35,7 @@
               <li><a href="/form">Register an item</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-              <li class="active"><a href="https://github.com/tchoutri/Exon">Source<span class="sr-only">(current)</span></a></li>
+              <a class="active" href="https://github.com/tchoutri/Exon"><i class="fa fa-github fa-3x"></i></a>
             </ul>
           </div><!--/.nav-collapse -->
         </div><!--/.container-fluid -->
