@@ -29,10 +29,10 @@ defmodule Exon.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-     {:credo, "~> 0.2.5", only: :dev},
-     {:phoenix, "~> 1.1.1"},
+     {:credo, "~> 0.3", only: :dev},
+     {:phoenix, "~> 1.1"},
      {:phoenix_ecto, "~> 2.0"},
-     {:sqlite_ecto, "~> 1.0.2"},
+     {:sqlite_ecto, "~> 1.0"},
      {:phoenix_html, "~> 2.3"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:combine, "~> 0.5"},
