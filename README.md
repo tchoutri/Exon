@@ -10,13 +10,9 @@ The specs are located [here](specs.md). Please tell me if something went wrong d
 
 ![Starting](http://i.imgur.com/8H4FoWk.png)
 
-![Home](http://i.imgur.com/ZOMapRf.png)
+![Home](http://i.imgur.com/wHFpRC6.png)
 
-![Form](http://i.imgur.com/Uc3IIiz.png)
-
-![Already Registered](http://i.imgur.com/IvzzlMN.png)
-
-![New Item](http://i.imgur.com/7ZoedQb.png)
+![Form](http://i.imgur.com/0vEdDHE.png)
 
 ### Running the server.
 

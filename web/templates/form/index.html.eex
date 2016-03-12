@@ -4,7 +4,7 @@
 <h2>Register an item</h2>
 
 <div class="form-group">
-  <label class="col-md-4 control-label" for="name">Name</label>
+  <label class="col-md-4 control-label" for="name"><i class="fa fa-pencil"> Name</i></label>
   <div class="col-md-4">
   <input id="name" name="name" type="text" placeholder="Fusion engine" class="form-control input-md" required="">
   <span class="help-block">Name your item.</span>
@@ -12,7 +12,7 @@
 </div>
 
 <div class="form-group">
-  <label class="col-md-4 control-label" for="textinput">Additional Notes</label>  
+  <label class="col-md-4 control-label" for="textinput"><i class="fa fa-pencil"> Additional Notes</i> </label>
   <div class="col-md-4">
   <input id="textinput" name="comments" type="text" placeholder="May explode at some point." class="form-control input-md" required="">
   <span class="help-block">A comment is mandatory.</span>
