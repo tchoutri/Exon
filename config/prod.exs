@@ -17,7 +17,9 @@ config :exon, Exon.Endpoint,
   cache_static_manifest: "priv/static/manifest.json"
 
 # Do not print debug messages in production
-config :logger, level: :info
+config :logger, :console,
+  format: "[$level] $message\n",
+  level: :info
 
 # ## SSL Support
 # Get a fucking reverse proxy such as Nginx.
