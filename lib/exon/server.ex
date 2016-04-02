@@ -25,7 +25,7 @@ alias Exon.Database
                 :message => "Protocol error, please refer to the documentation",
                 :data => nil
               } |> Poison.encode!
-    {:reply, message, state}
+    {:reply, message <> "\n", state}
   end
 
   def handle_call({:item, {name, comments}}, _from, state) do
@@ -42,7 +42,7 @@ alias Exon.Database
           :data => id
           } |> Poison.encode!
     end
-    {:reply, message, state}
+    {:reply, message <> "\n\n", state}
   end
 
   def handle_call({:id, id}, _from, state) do
@@ -51,21 +51,21 @@ alias Exon.Database
   end
 
   def handle_call({:add_new_comment, id, comments}, _from, state) do
-    case Database.add_new_comment(id, comments) do
+    message = case Database.add_new_comment(id, comments) do
       true ->
-        message = %{:status => :success,
-                    :message => "New comment added to #{id}",
-                    :data => nil
-                  } |> Poison.encode!
+        %{:status => :success,
+          :message => "New comment added to #{id}",
+          :data => nil
+          } |> Poison.encode!
 
-        {:reply, message, state}
         false ->
-        message = %{:status => :error,
-                    :message => "Could not add new comment.",
-                    data: nil
-                  } |> Poison.encode!
-        {:reply, message, state}
+        %{:status => :error,
+          :message => "Could not add new comment.",
+          :data => nil
+         } |> Poison.encode!
       _ -> nil
     end
-  end
+    {:reply, message <> "\n", state}
+  :x
+  :x
 end

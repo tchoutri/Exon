@@ -101,7 +101,12 @@ import Ecto.Query
   defp parse_informations({:error, :id_not_found, id}) do
     %{:status => :error,
       :message => "Item not found.",
-      :data => id
+      :data => %{
+        :name => "",
+        :id   => id,
+        :date => "",
+        :comments => ""
+      }
     }
   end
 end

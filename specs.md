@@ -85,7 +85,12 @@ When adding a new comment to an ID, Exon will send the following JSON document:
 {
   "status": "success",
   "message": "New comment added.",
-  "data": null
+  "data": {
+    "name": "Engine",
+    "id": 1,
+    "date": "",
+    "comments": "BOOM!"
+  }
 }
 ```
 Or if it fails, this:
@@ -108,7 +113,12 @@ If you request a wrong item number, let's say 5, Exon will answer with the follo
 {
   "status": "error",
   "message": "Item not found.",
-  "data": "4"
+  "data": {
+    "name": "",
+    "id": 5,
+    "date": "",
+    "comments": ""
+  }
 }
 ```
 #### Duplicate item
