@@ -66,6 +66,5 @@ alias Exon.Database
       _ -> nil
     end
     {:reply, message <> "\n", state}
-  :x
-  :x
+  end
 end
