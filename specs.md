@@ -21,14 +21,14 @@ The separator between `commands`, `subcommands` and `key/value` blocks is a spac
 There are for the moment a limited number of possible `commands` and `subcommands`:
 
 * `id`
-* `help`
-* `add`
-    * `new`, which takes the following keys:
-        * `name="Name of the item"`
-        * `comments="Comments about the item"`
-    * `comment` which takes the following keys:
-        * `id=ID` with ID being a natural integer strictly greater than 0 between two double quotes
-        * `comments="Another comment"`.
+
+* `add` which takes the following keys:
+    * `name="Name of the item"`
+    * `comments="Comments about the item"`
+
+* `comment` which takes the following keys:
+    * `id=ID` with ID being a natural integer strictly greater than 0 between two double quotes
+    * `comments="Another comment"`.
 
 * A `message` requesting informations about a particular ID uses the `id` commandwill say:
 

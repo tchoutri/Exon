@@ -61,8 +61,8 @@ require Logger
     case sanitize_linebreaks(line) do
       "id " <> id        -> Exon.Server.get_id(id)
 
-      "add new " <> info -> parse_add_new(info, parser)
-      "add comment " <> info -> parse_add_comment(info, parser)
+      "add " <> info -> parse_add_new(info, parser)
+      "comment " <> info -> parse_add_comment(info, parser)
       "" -> ""
       _  -> Exon.Server.protocol
     end
