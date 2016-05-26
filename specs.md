@@ -73,7 +73,7 @@ When registering a new item with the `add new` message, Exon will send this resp
 {
   "status": "success",
   "message": "New item registered",
-  "data": "ID"
+  "data": "<ID>"
 }
 ```
 
@@ -85,12 +85,7 @@ When adding a new comment to an ID, Exon will send the following JSON document:
 {
   "status": "success",
   "message": "New comment added.",
-  "data": {
-    "name": "Engine",
-    "id": 1,
-    "date": "",
-    "comments": "BOOM!"
-  }
+  "data": "<ID>"
 }
 ```
 Or if it fails, this:
@@ -98,8 +93,8 @@ Or if it fails, this:
 ```JSON
 {
   "status": "error",
-  "message": "error message",
-  "data": null
+  "message": "Could not add new comment.",
+  "data": <ID>
 }
 ```
 
