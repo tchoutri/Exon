@@ -1,7 +1,8 @@
 Exon 2 [![Elixir](https://cdn.rawgit.com/tchoutri/Exon/master/elixir.svg)](http://elixir-lang.org) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 ====
 
-Exon is a “mess manager” developed in [Elixir](http://elixir-lang.org) and provides a simple API to manage & document your stuff.
+Exon is a “mess manager” developed in [Elixir](http://elixir-lang.org) and provides a simple API to manage & document your stuff. And by that I mean
+"physical stuff".
 
 ### About the clients
 The specs are located [here](specs.md). Please tell me if something went wrong during their implementation.

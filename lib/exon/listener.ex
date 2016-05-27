@@ -96,7 +96,12 @@ require Logger
   end
 
   defp peer_address(socket) do
-    {:ok, {addr, _remote_port}} = :inet.peername(socket)
-    addr |> Tuple.to_list |> Enum.join(".")
+    case :inet.peername(socket) do
+      {:ok, {addr, _remote_port}} ->
+        addr |> Tuple.to_list |> Enum.join(".")
+      {:error, :enotconn}         ->
+        Logger.warn("Could not get peer's name")
+        "nowhere"
+    end
   end
 end
