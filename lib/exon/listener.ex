@@ -39,7 +39,8 @@ require Logger
         Logger.debug("[#{inspect(self)}] client from #{peer} closed the connection")
         :gen_tcp.close(socket)
       {:ok, data} ->
-        :gen_tcp.send(socket, handler(data))
+        result = handler(data)
+        :gen_tcp.send(socket, result)
         handle(socket)
       {:error, :closed} ->
         Logger.debug("[#{inspect(self)}] client from #{peer} unexpectedly closed the connection")
@@ -49,6 +50,7 @@ require Logger
   end
 
   defp handler(line) do
+    Logger.debug("==> " <> line)
     parser = sep_by1(map(
     sequence([
       pair_left(word, char(?=)),
@@ -60,7 +62,6 @@ require Logger
 
     case sanitize_linebreaks(line) do
       "id " <> id        -> Exon.Server.get_id(id)
-
       "add " <> info -> parse_add_new(info, parser)
       "comment " <> info -> parse_add_comment(info, parser)
       "" -> ""
@@ -71,7 +72,7 @@ require Logger
   def sanitize_linebreaks(line) do
     if String.valid?(line) do
       line |> String.replace("\r", "") |> String.replace("\n", "")
-    else 
+    else
       ""
     end
   end

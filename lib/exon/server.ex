@@ -54,14 +54,14 @@ alias Exon.Database
     message = case Database.add_new_comment(id, comments) do
       true ->
         %{:status => :success,
-          :message => "New comment added to #{id}",
-          :data => nil
+          :message => "New comment added.",
+          :data => id
           } |> Poison.encode!
 
         false ->
         %{:status => :error,
           :message => "Could not add new comment.",
-          :data => nil
+          :data => id
          } |> Poison.encode!
       _ -> nil
     end
