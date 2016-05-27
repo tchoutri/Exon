@@ -40,7 +40,7 @@ There are for the moment a limited number of possible `commands` and `subcommand
 
 * A `message` adding a new comment to a particular item will say:
 
-`add comment id="1"::comments="this is another comment"`
+`comment id="1"::comments="this is another comment"`
 
 ### Receiving messages
 Now it's getting a bit more funky. Due to an obvious will of interoperability with the rest of the world, the API response is UTF-8-encoded and in JSON.
