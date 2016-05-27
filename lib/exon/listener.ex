@@ -50,7 +50,7 @@ require Logger
   end
 
   defp handler(line) do
-    Logger.debug("==> " <> line)
+    Logger.debug("==> " <> String.strip(line))
     parser = sep_by1(map(
     sequence([
       pair_left(word, char(?=)),
@@ -96,12 +96,7 @@ require Logger
   end
 
   defp peer_address(socket) do
-    case :inet.peername(socket) do
-      {:ok, {addr, _remote_port}} ->
-        addr |> Tuple.to_list |> Enum.join(".")
-      {:error, :enotconn}         ->
-        Logger.warn("Could not get peer's name")
-        "nowhere"
-    end
+    {:ok, {addr, _remote_port}} = :inet.peername(socket)
+    addr |> Tuple.to_list |> Enum.join(".")
   end
 end

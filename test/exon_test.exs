@@ -42,8 +42,8 @@ defmodule ExonTest do
 
   ####### This one is currently failling for an unknown reason #######
 
-#   1) test Protocol Validation #3 : Duplicate items (ExonTest)
-#      test/exon_test.exs:42
+#   1) test Protocol Validation #4 : Duplicate items (ExonTest)
+#      test/exon_test.exs:68
 #      ** (ExUnit.TimeoutError) test timed out after 60000ms. You can change the timeout:
 
 #        1. per test by setting "@tag timeout: x"
@@ -56,14 +56,21 @@ defmodule ExonTest do
 
 #      stacktrace:
 #        :prim_inet.recv0/3
-#        test/exon_test.exs:46
+#        test/exon_test.exs:72
 #        (ex_unit) lib/ex_unit/runner.ex:293: ExUnit.Runner.exec_test/1
 #        (stdlib) timer.erl:166: :timer.tc/1
 #        (ex_unit) lib/ex_unit/runner.ex:242: anonymous fn/3 in ExUnit.Runner.spawn_test/3
 
+# ..
 
-# Finished in 61.5 seconds (1.1s on load, 60.4s on tests)
-# 3 tests, 1 failure
+# Finished in 61.4 seconds (1.2s on load, 60.2s on tests)
+# 4 tests, 1 failure
+
+# Randomized with seed 947316
+# 17:13:38.277 [error] Process #PID<0.340.0> raised an exception
+# ** (MatchError) no match of right hand side value: {:error, :enotconn}
+#     (exon) lib/exon/listener.ex:99: Exon.Listener.peer_address/1
+#     (exon) lib/exon/listener.ex:36: Exon.Listener.handle/1
 
   test "Protocol Validation #4 : Duplicate items", %{socket: socket} do
     IO.puts "Protocol Validation #3 : Duplicate items"
