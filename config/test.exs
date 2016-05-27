@@ -6,14 +6,9 @@ config :exon, Exon.Endpoint,
   http: [port: 4001],
   server: false
 
-# Print only warnings and errors during test
-config :logger, level: :warn
+config :logger, level: :debug
 
-# Configure your database
+ # Configure your database
 config :exon, Exon.Repo,
-  adapter: Ecto.Adapters.Postgres,
-  username: "postgres",
-  password: "postgres",
-  database: "exon_test",
-  hostname: "localhost",
-  pool: Ecto.Adapters.SQL.Sandbox
+  adapter: Sqlite.Ecto,
+  database: "priv/test.sqlite3"
