@@ -63,9 +63,7 @@ import Ecto.Query
     {:ok, item.id}
   end
 
-  defp record({:duplicate, id}, _name, _comments) do
-    {:duplicate, id}
-  end
+  defp record({:duplicate, id}, _name, _comments), do: {:duplicate, id}
 
   defp check_duplicate(name) do
     query = from item in Item, where: item.name == ^name, select: item
