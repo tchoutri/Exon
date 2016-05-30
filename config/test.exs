@@ -6,7 +6,7 @@ config :exon, Exon.Endpoint,
   http: [port: 4001],
   server: false
 
-config :logger, level: :debug
+config :logger, level: :info
 
  # Configure your database
 config :exon, Exon.Repo,
