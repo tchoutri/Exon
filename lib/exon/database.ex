@@ -2,9 +2,6 @@ defmodule Exon.Database do
 @moduledoc """
 *TODO*
 """
-@meta :foo
-@index :bar
-@interval :baz
 
 use GenServer
 require Logger
@@ -75,11 +72,13 @@ import Ecto.Query
 
   defp comment(id, new_comments) do
     query = from i in Exon.Item, where: i.id == ^id, select: i
-    [item] = Repo.all(query)
-    comments = item.comments <> "\n⋅" <> new_comments
-    case Repo.update(Item.changeset(item, %{comments: comments})) do
-      {:ok, _model} -> true
-      {:error, _changeset} -> false
+    with [item] <- Repo.all(query),
+         comments = item.comments <> "\n⋅" <> new_comments,
+         {:ok, _model} <- Repo.update(Item.changeset(item, %{comments: comments})) do
+      {:ok, :added}
+    else
+      []          -> {:error, "Item does not exist."}
+      {:error, _} -> {:error, "Could not insert comment to database."}
     end
   end
 

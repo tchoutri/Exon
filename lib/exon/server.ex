@@ -50,15 +50,15 @@ alias Exon.Database
 
   def handle_call({:add_new_comment, id, comments}, _from, state) do
     message = case Database.add_new_comment(id, comments) do
-      true ->
+      {:ok, :added} ->
         %{:status => :success,
           :message => "New comment added.",
           :data => id
           } |> Poison.encode!
 
-        false ->
+      {:error, msg} ->
         %{:status => :error,
-          :message => "Could not add new comment.",
+          :message => msg,
           :data => id
          } |> Poison.encode!
       _ -> nil
