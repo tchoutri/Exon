@@ -13,19 +13,17 @@ alias Exon.Database
   def get_id(id), do: GenServer.call(Server, {:id, id})
   def new_item(name, comments), do: GenServer.call(Server, {:item, {name, comments}})
   def new_comment(id, comments), do: GenServer.call(Server, {:add_new_comment, id, comments}) 
-  def protocol, do: GenServer.call(Server, {:help, :protocol})
-
-  def init(:ok) do
-    Logger.info(IO.ANSI.green <> "Server started." <> IO.ANSI.reset)
-    {:ok, :ok}
-  end
-
-  def handle_call({:help, :protocol}, _from, state) do
+  def protocol do
     message = %{:status => :error,
                 :message => "Protocol error, please refer to the documentation",
                 :data => nil
               } |> Poison.encode!
-    {:reply, message <> "\n", state}
+    message <> "\n"
+  end
+
+  def init(:ok) do
+    Logger.info(IO.ANSI.green <> "Server started." <> IO.ANSI.reset)
+    {:ok, :ok}
   end
 
   def handle_call({:item, {name, comments}}, _from, state) do

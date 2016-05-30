@@ -58,7 +58,7 @@ import Ecto.Query
     name = String.strip(name)
     comments = String.strip(comments)
 
-    {:ok, item} = Repo.insert(%Item{name: name, comments: comments})
+    {:ok, item} = Repo.insert(%Item{name: name, comments: "⋅" <> comments})
 
     {:ok, item.id}
   end
