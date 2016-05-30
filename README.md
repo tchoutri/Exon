@@ -38,4 +38,7 @@ The specs are located [here](specs.md). Please tell me if something went wrong d
     - [x] Don't forget 404 on non-existing items.
 - [ ] Make it more CRUD
     * For the moment, every comment and item are stored *ad vitam æternam*
+    * Every user has to be trusted.
 - [ ] A search functionality
+    - FTS4 ?
+    - `LIKE` ?
