@@ -28,6 +28,11 @@ defmodule ExonTest do
   end
 
   test "Protocol Validation #3 : Comment", %{socket: socket} do
+    case Exon.Database.get_id("1") do
+      %{data: %{comments: _, date: _, id: 1, name: _}, message: "Item not found.", status: :error} ->
+        Exon.Database.add_new_id("test1", "comment1")
+      _ -> nil
+    end
     :ok = :gen_tcp.send(socket, ~s(comment id="1"::comments="This is another comment"\n))
 
     with {:ok, response} <- :gen_tcp.recv(socket, 0),
