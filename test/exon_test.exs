@@ -1,16 +1,13 @@
 defmodule ExonTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case, async: true
 
-  setup_all do
-    {:ok, socket} = :gen_tcp.connect('localhost', 8878, [:binary, active: false])
-    IO.puts("[ExUnit] Sending fake data")
-    :gen_tcp.send(socket, ~s(add name="test1"::comments="A first comment"\n))
-    {:ok, _result} = :gen_tcp.recv(socket, 0)
-    {:ok, [socket: socket]}
+  setup do
+     {:ok, socket} = :gen_tcp.connect('localhost', 8878, [:binary, active: false])
+     {:ok, [socket: socket]}
   end
 
   test "Protocol Validation #1 : ID", %{socket: socket} do
-    IO.puts("[ExUnit] Protocol Validation #1 : ID")
+    Exon.Server.new_item("test1", "This is a comment")
     :ok = :gen_tcp.send(socket, "id 1\n")
 
     with {:ok, response} <- :gen_tcp.recv(socket, 0),
@@ -21,7 +18,6 @@ defmodule ExonTest do
   end
 
   test "Protocol Validation #2 Checking non-existing ID", %{socket: socket} do
-    IO.puts "[ExUnit] Checking non-existing ID" 
    :ok = :gen_tcp.send(socket, "id 324234\n")
 
    with {:ok, response} <- :gen_tcp.recv(socket, 0),
@@ -32,7 +28,6 @@ defmodule ExonTest do
   end
 
   test "Protocol Validation #3 : Comment", %{socket: socket} do
-    IO.puts "[ExUnit] Protocol Validation #2 : Comment"
     :ok = :gen_tcp.send(socket, ~s(comment id="1"::comments="This is another comment"\n))
 
     with {:ok, response} <- :gen_tcp.recv(socket, 0),
@@ -40,41 +35,9 @@ defmodule ExonTest do
          do: assert %{"data" => 1, "message" => "New comment added.", "status" => "success"} == data
   end
 
-  ####### This one is currently failling for an unknown reason #######
-
-#   1) test Protocol Validation #4 : Duplicate items (ExonTest)
-#      test/exon_test.exs:68
-#      ** (ExUnit.TimeoutError) test timed out after 60000ms. You can change the timeout:
-
-#        1. per test by setting "@tag timeout: x"
-#        2. per case by setting "@moduletag timeout: x"
-#        3. globally via "ExUnit.start(timeout: x)" configuration
-#        4. or set it to infinity per run by calling "mix test --trace"
-#           (useful when using IEx.pry)
-
-#      Timeouts are given as integers in milliseconds.
-
-#      stacktrace:
-#        :prim_inet.recv0/3
-#        test/exon_test.exs:72
-#        (ex_unit) lib/ex_unit/runner.ex:293: ExUnit.Runner.exec_test/1
-#        (stdlib) timer.erl:166: :timer.tc/1
-#        (ex_unit) lib/ex_unit/runner.ex:242: anonymous fn/3 in ExUnit.Runner.spawn_test/3
-
-# ..
-
-# Finished in 61.4 seconds (1.2s on load, 60.2s on tests)
-# 4 tests, 1 failure
-
-# Randomized with seed 947316
-# 17:13:38.277 [error] Process #PID<0.340.0> raised an exception
-# ** (MatchError) no match of right hand side value: {:error, :enotconn}
-#     (exon) lib/exon/listener.ex:99: Exon.Listener.peer_address/1
-#     (exon) lib/exon/listener.ex:36: Exon.Listener.handle/1
-
   test "Protocol Validation #4 : Duplicate items", %{socket: socket} do
-    IO.puts "Protocol Validation #3 : Duplicate items"
-    :ok = :gen_tcp.send(socket, ~s(add name="test1"::comments="foobarlol"))
+    Exon.Server.new_item("test1", "This is another comment")
+    :ok = :gen_tcp.send(socket, ~s(add name="test1"::comments="foobarlol"\n))
 
     with {:ok, response} <- :gen_tcp.recv(socket, 0),
          {:ok, data}     <- Poison.decode(response),
