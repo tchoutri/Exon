@@ -1,5 +1,4 @@
-Exon 2 [![Elixir](https://cdn.rawgit.com/tchoutri/Exon/master/elixir.svg)](http://elixir-lang.org) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-====
+# Exon 2 [![Elixir](https://cdn.rawgit.com/tchoutri/Exon/master/elixir.svg)](http://elixir-lang.org) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT) [![Deps Status](https://beta.hexfaktor.org/badge/all/github/tchoutri/Exon.svg)](https://beta.hexfaktor.org/github/tchoutri/Exon)
 
 Exon is a “mess manager” developed in [Elixir](http://elixir-lang.org) and provides a simple API to manage & document your stuff. And by that I mean
 "physical stuff".
@@ -38,7 +37,7 @@ The specs are located [here](specs.md). Please tell me if something went wrong d
     - [x] Don't forget 404 on non-existing items.
 - [ ] Make it more CRUD
     * For the moment, every comment and item are stored *ad vitam æternam*
-    * Every user has to be trusted.
+    * Every user has to be truste.
 - [ ] A search functionality
     - FTS4 ?
     - `LIKE` ?
