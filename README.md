@@ -28,6 +28,9 @@ The specs are located [here](specs.md). Please tell me if something went wrong d
 
 ### What should be done
 
+- [ ] AUTH!!!
+    - an `auth` command.
+        - Then there must be SSL.
 - [ ] Writing tests.
 - [x] Returning the ID of the newly-created entry in the database.
 - [x] Open an issue on Combine because it is not happy to receive some non-ASCII characters, such as “,”,Ë…
