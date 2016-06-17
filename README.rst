@@ -2,8 +2,13 @@
 Exon 2 |elixir| |license| |hexfaktor|
 =====================================
 
-Exon is a “mess manager” developed in Elixir_ and provides a simple API to manage & document your stuff. And by that I mean
-"physical stuff".
+Exon is a “mess manager” developed in Elixir_ and provides a simple API to manage & document your stuff. And by that I mean "physical stuff".
+=============================================================================================================================================
+
+.. contents::
+    :local:
+    :depth: 3
+    :backlinks: none
 
 About the clients
 ~~~~~~~~~~~~~~~~~
@@ -35,8 +40,7 @@ What should be done
 ~~~~~~~~~~~~~~~~~~~
 
 - AUTH!!!
-    - an ``auth`` command.
-        - Then there must be SSL.
+    - an ``auth`` command and SSL.
 - Writing tests.
 - ☑️ Returning the ID of the newly-created entry in the database.
 - ☑️ Open an issue on Combine because it is not happy to receive some non-ASCII characters, such as “,”,Ë…
