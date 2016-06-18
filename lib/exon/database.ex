@@ -1,7 +1,5 @@
 defmodule Exon.Database do
-@moduledoc """
-*TODO*
-"""
+@moduledoc false
 
 use GenServer
 require Logger

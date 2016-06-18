@@ -1,4 +1,7 @@
 defmodule Exon do
+  @moduledoc """
+  Exon is a “mess manager” developed in Elixir_ and provides a simple API to manage & document your stuff lying around.
+  """
   use Application
 
   def start(_type, _args) do

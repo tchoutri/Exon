@@ -1,4 +1,5 @@
 defmodule Exon.Supervisor do
+@moduledoc false
 use Supervisor
 require Logger
 

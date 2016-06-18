@@ -1,4 +1,5 @@
 defmodule Exon.Item do
+@moduledoc false
   use Ecto.Model
 
   schema "items" do

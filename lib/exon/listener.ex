@@ -1,7 +1,6 @@
 defmodule Exon.Listener do
-@moduledoc """
-*TODO*
-"""
+@moduledoc false
+
 use GenServer
 use Combine
 require Logger
