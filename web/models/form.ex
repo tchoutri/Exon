@@ -1,4 +1,5 @@
 defmodule Exon.Form do
+@moduledoc false
   use Exon.Web, :model
 
   schema "forms" do

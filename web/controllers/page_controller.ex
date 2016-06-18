@@ -1,4 +1,6 @@
 defmodule Exon.PageController do
+@moduledoc false
+
   use Exon.Web, :controller
   import Exon.Router.Helpers
   alias Exon.{Endpoint, QRCode}
