@@ -7,14 +7,12 @@ defmodule ExonTest do
   end
 
   test "Protocol Validation #1:\tID", %{socket: socket} do
-    Exon.Server.new_item("test1", "This is a comment")
-
     :ok = :gen_tcp.send(socket, "id 1\n")
 
     with {:ok, response} <- :gen_tcp.recv(socket, 0),
          {:ok, data}    <- Poison.decode(response),
-         do: assert %{"data" => %{"comments" => _, "date" => _,
-                                 "id" => 1, "name" => "test1"}, "message" => "Item is available.",
+         do: assert %{"data" => %{"comments" => "⋅This is a comment", "date" => _,
+                                 "id" => 1, "name" => "Test1"}, "message" => "Item is available.",
                                  "status" => "success"} = data
   end
 
@@ -29,24 +27,21 @@ defmodule ExonTest do
   end
 
   test "Protocol Validation #3:\tComment", %{socket: socket} do
-    Exon.Server.new_item("Test3", "This is a test comment")
-
-    :ok = :gen_tcp.send(socket, ~s(comment id="1"::comments="This is another comment"\n))
+    :ok = :gen_tcp.send(socket, ~s(comment id="3"::comments="This is another comment"\n))
 
     with {:ok, response} <- :gen_tcp.recv(socket, 0),
          {:ok, data}    <- Poison.decode(response),
-         do: assert %{"data" => 1, "message" => "New comment added.",
+         do: assert %{"data" => 3, "message" => "New comment added.",
                       "status" => "success"} == data
   end
 
   test "Protocol Validation #4:\tDuplicate items", %{socket: socket} do
-    Exon.Server.new_item("test1", "This is another comment")
-    :ok = :gen_tcp.send(socket, ~s(add name="test1"::comments="foobarlol"\n))
+    :ok = :gen_tcp.send(socket, ~s(add name="Test1"::comments="foobarlol"\n))
 
     with {:ok, response} <- :gen_tcp.recv(socket, 0),
          {:ok, data}     <- Poison.decode(response),
-         do: assert %{"data" => _, "message" => "Item already exists", "status" => 
-                      "error"} = data
+         do: assert %{"data" => _, "message" => "Item already exists",
+                      "status" => "error"} = data
   end
 
   test "Protocol Validation #5.1:\tMalformed `add` request", %{socket: socket} do
@@ -54,7 +49,7 @@ defmodule ExonTest do
     with {:ok, response} <- :gen_tcp.recv(socket, 0),
          {:ok, data}     <- Poison.decode(response),
          do: assert %{"data" => nil, "message" => "Protocol error, please refer to the documentation",
-                       "status" => "error"} == data
+                      "status" => "error"} == data
   end
 
   test "Protocol Validation #5.2:\tMalformed `comment` request", %{socket: socket} do
