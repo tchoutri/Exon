@@ -25,9 +25,9 @@ About the server
 Running the server.
 ~~~~~~~~~~~~~~~~~~~
 
-(export MIX_ENV=prod)
+(``export MIX_ENV=prod``)
 
-1. Edit the [config file](config/config.exs) according to your needs.
+1. Edit the `config file` ) according to your needs.
 2. ``mix do deps.get, compile``
 3. ``mix ecto.migrate``
 4. ``iex -S mix`` or ``iex -S mix phoenix.server`` to enable the WebUI
@@ -39,14 +39,9 @@ What should be done
 ~~~~~~~~~~~~~~~~~~~
 
 - AUTH!!!
-    - an ``auth`` command and SSL.
+    - an ``auth`` command.
+    - TLS should be handled by ``stunnel``.
 - Writing tests.
-- ☑️ Returning the ID of the newly-created entry in the database.
-- ☑️ Open an issue on Combine because it is not happy to receive some non-ASCII characters, such as “,”,Ë…
-- ☑️ Organise the transition to SQlite
-    - ☑️ Ability to add comments?
-- ☑️Implement QRCode generation (I found the lib!)
-    - ☑️Don't forget 404 on non-existing items.
 - Make it more CRUD
     * For the moment, every comment and item are stored *ad vitam æternam*
     * Every user has to be truste.
@@ -57,6 +52,7 @@ What should be done
 
 .. _Elixir: http://elixir-lang.org
 .. _here: specs.md
+.. _``config file``: config/config.exs
 
 
 .. |elixir| image:: https://cdn.rawgit.com/tchoutri/Exon/master/elixir.svg

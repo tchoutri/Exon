@@ -2,6 +2,11 @@
 Protocol Specifications
 =======================
 
+.. contents::
+    :local:
+    :depth: 3
+    :backlinks: none
+
 Introduction
 ============
 
@@ -9,6 +14,7 @@ Exon is what can be called a “mess manager”. By "mess" I mean "A situation w
 documented, in their purpose or their current state of existence".
 Exon is therefore an item recording system that aims to provide a unified interface (API) for people who would like to fetch informations about those
 abovementionned objects.
+
 
 Protocol
 ========
