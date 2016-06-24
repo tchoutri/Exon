@@ -6,7 +6,7 @@ Exon is a “mess manager” developed in Elixir_ and provides a simple API to m
 
 .. contents::
     :local:
-    :depth: 3
+    :depth: 1 
     :backlinks: none
 
 About the clients
@@ -17,10 +17,13 @@ About the server
 ~~~~~~~~~~~~~~~~
 
 .. image:: http://i.imgur.com/8H4FoWk.png
+           :width: 33%
 
 .. image:: http://i.imgur.com/wHFpRC6.png
+           :width: 33%
 
 .. image:: http://i.imgur.com/0vEdDHE.png
+           :width: 33%
 
 Running the server.
 ~~~~~~~~~~~~~~~~~~~
@@ -38,9 +41,7 @@ Running the server.
 What should be done
 ~~~~~~~~~~~~~~~~~~~
 
-- AUTH!!!
-    - an ``auth`` command.
-    - TLS should be handled by ``stunnel``.
+- Authentication_
 - Writing tests.
 - Make it more CRUD
     * For the moment, every comment and item are stored *ad vitam æternam*
@@ -50,9 +51,26 @@ What should be done
     - ``LIKE`` ?
 
 
+Authentication
+##############
+
+I am exploring my options about how to implement an authentication system for Exon.
+It should be implementing the architecture goals (mostly taken from OWASP's `Guide to Authentication`_):
+
+* Credentials transmitted over an encrypted link (thanks ``stunnel``)
+* Hashing and Salting
+* Returning the date & time of last time they logged in
+* Enforce password complexity
+* Password should be easy to change
+* Only return “Login failed; Invalid userID or password” in case of login failure
+* Don't rely on the client's IP address / hostname because they can be faked/spoofed.
+
+
+
 .. _Elixir: http://elixir-lang.org
 .. _here: specs.md
-.. _``config file``: config/config.exs
+.. _`config file`: config/config.exs
+.. _`Guide to Authentication`: https://www.owasp.org/index.php/Guide_to_Authentication
 
 
 .. |elixir| image:: https://cdn.rawgit.com/tchoutri/Exon/master/elixir.svg
