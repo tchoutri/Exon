@@ -58,20 +58,21 @@ I am exploring my options about how to implement an authentication system for Ex
 It should be implementing the architecture goals (mostly taken from OWASP's `Guide to Authentication`_):
 
 * Credentials transmitted over an encrypted link (thanks ``stunnel``)
-* Hashing and Salting
+* Hashing and Salting / NO PLAINTEXT!!!!
 * Returning the date & time of last time they logged in
 * Enforce password complexity
 * Password should be easy to change
 * Only return “Login failed; Invalid userID or password” in case of login failure
+* Still in case of login failure, activate a timeout_ and a ban.
 * Don't rely on the client's IP address / hostname because they can be faked/spoofed.
 
 
 
 .. _Elixir: http://elixir-lang.org
-.. _here: specs.md
+.. _here: specs.rst
 .. _`config file`: config/config.exs
 .. _`Guide to Authentication`: https://www.owasp.org/index.php/Guide_to_Authentication
-
+.. _timeout: https://www.owasp.org/index.php/Guide_to_Authentication#Suggested_Timeouts
 
 .. |elixir| image:: https://cdn.rawgit.com/tchoutri/Exon/master/elixir.svg
             :target: http://elixir-lang.org
