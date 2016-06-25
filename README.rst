@@ -45,7 +45,6 @@ What should be done
 - Writing tests.
 - Make it more CRUD
     * For the moment, every comment and item are stored *ad vitam æternam*
-    * Every user has to be truste.
 - A search functionality
     - FTS4 ?
     - ``LIKE`` ?
@@ -55,15 +54,20 @@ Authentication
 ##############
 
 I am exploring my options about how to implement an authentication system for Exon.
-It should be implementing the architecture goals (mostly taken from OWASP's `Guide to Authentication`_):
+An authenticated user would be allowed to: 
+
+* Remove comments
+* Remove items
+
+The authentication system should be implementing the following architecture goals (mostly taken from OWASP's `Guide to Authentication`_):
 
 * Credentials transmitted over an encrypted link (thanks ``stunnel``)
 * Hashing and Salting / NO PLAINTEXT!!!!
 * Returning the date & time of last time they logged in
 * Enforce password complexity
 * Password should be easy to change
-* Only return “Login failed; Invalid userID or password” in case of login failure
-* Still in case of login failure, activate a timeout_ and a ban.
+* Only return “Login failed; Invalid user ID or password” in case of login failure
+* Still in case of repetedly login failure, activate a timeout_ and a ban.
 * Don't rely on the client's IP address / hostname because they can be faked/spoofed.
 
 
