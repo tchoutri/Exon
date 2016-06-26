@@ -53,7 +53,7 @@ import Ecto.Query
     name = String.strip(name)
     comments = String.strip(comments)
 
-    {:ok, item} = Repo.insert(%Item{name: name, comments: "⋅" <> comments})
+    {:ok, item} = Repo.insert(%Item{name: name, comments: "•" <> comments})
 
     {:ok, item.id}
   end
@@ -71,7 +71,7 @@ import Ecto.Query
   defp comment(id, new_comments) do
     query = from i in Exon.Item, where: i.id == ^id, select: i
     with [item] <- Repo.all(query),
-         comments = item.comments <> "\n⋅" <> new_comments,
+         comments = item.comments <> "\n•" <> new_comments,
          {:ok, _model} <- Repo.update(Item.changeset(item, %{comments: comments})) do
       {:ok, :added}
     else
