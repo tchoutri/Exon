@@ -49,12 +49,12 @@ require Logger
   end
 
   defp handler(line) do
-    Logger.debug("==> " <> String.strip(line))
+  #    Logger.debug("==> " <> String.strip(line))
     parser = sep_by1(map(
     sequence([
       pair_left(word, char(?=)),
         # we use word_of here in order to treat whitespace characters as valid word characters
-        between(char(?"), word_of(~r/[\w\s]/u), char(?"))
+        between(char(?"), word_of(~r/[A-Za-z0-9 _.,!¡\/$\s]/u), char(?"))
       ]),
         fn [key, value] -> {key, value} end),
         string("::"))
