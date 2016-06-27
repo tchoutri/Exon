@@ -55,7 +55,7 @@ require Logger
       pair_left(word, char(?=)),
         between(char(?"), word_of(~r/[A-Za-z0-9 _.,!¡-‑–—\/$ \s]/u), char(?"))
       ]),
-        fn [key, value] -> {key, value} end),
+        fn([key, value]) -> {key, value} end),
         string("::"))
 
     case sanitize_linebreaks(line) do
