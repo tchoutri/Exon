@@ -23,7 +23,6 @@ defmodule ExonTest do
         {:ok, data}     <- Poison.decode(response),
         do: assert %{"data" => %{"comments" => "", "date" => "", "id" => 324234, "name" => ""},
                       "message" => "Item not found.", "status" => "error"} == data
-
   end
 
   test "Protocol Validation:\tComment", %{socket: socket} do
