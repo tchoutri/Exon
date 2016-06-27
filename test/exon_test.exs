@@ -55,14 +55,14 @@ defmodule ExonTest do
     :ok = :gen_tcp.send(socket, ~s(add name="Fusion engine"::comments="Could explode at any time."\n))
      with {:ok, response} <- :gen_tcp.recv(socket, 0),
           {:ok, data}     <- Poison.decode(response),
-          do: assert %{"data" => _, "message" => "New item registered", "status" => "succes"} = data
+          do: assert %{"data" => _, "message" => "New item registered", "status" => "success"} = data
   end
 
   test "Protocol Validation:\tAccentuated `add` request", %{socket: socket} do
-    :ok = :gen_tcp.send(socket, ~s(add name"=Truc qui fait des flammes'::comments="ÇA CHAAAAUFFE SA RAAAACE !!!!!"\n))
+    :ok = :gen_tcp.send(socket, ~s(add name"=Truc qui fait des flammes"::comments="ÇA CHAAAAUFFE SA RAAAACE !!!!!"\n))
      with {:ok, response} <- :gen_tcp.recv(socket, 0),
           {:ok, data}     <- Poison.decode(response),
-          do: assert %{"data" => _, "message" => "New item registered", "status" => "succes"} = data
+          do: assert %{"data" => _, "message" => "New item registered", "status" => "success"} = data
   end
 
   test "Protocol Validation:\tMalformed `add` request", %{socket: socket} do
