@@ -29,7 +29,7 @@ alias Exon.Database
     message = case Database.add_new_id(name, comments) do
       {:ok, id} ->
         %{:status => :success,
-          :message => "New item registered.",
+          :message => "New item registered",
           :data => id
           } |> Poison.encode!
 
@@ -51,7 +51,7 @@ alias Exon.Database
     message = case Database.add_new_comment(id, comments) do
       {:ok, :added} ->
         %{:status => :success,
-          :message => "New comment added.",
+          :message => "New comment added",
           :data => id
           } |> Poison.encode!
 

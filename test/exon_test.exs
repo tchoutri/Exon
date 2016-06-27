@@ -12,7 +12,7 @@ defmodule ExonTest do
     with {:ok, response} <- :gen_tcp.recv(socket, 0),
          {:ok, data}    <- Poison.decode(response),
          do: assert %{"data" => %{"comments" => "•This is a comment", "date" => _,
-                                 "id" => 1, "name" => "Test1"}, "message" => "Item is available.",
+                                 "id" => 1, "name" => "Test1"}, "message" => "Item is available",
                                  "status" => "success"} = data
   end
 
@@ -22,7 +22,7 @@ defmodule ExonTest do
    with {:ok, response} <- :gen_tcp.recv(socket, 0),
         {:ok, data}     <- Poison.decode(response),
         do: assert %{"data" => %{"comments" => "", "date" => "", "id" => 324234, "name" => ""},
-                      "message" => "Item not found.", "status" => "error"} == data
+                      "message" => "Item not found", "status" => "error"} == data
   end
 
   test "Protocol Validation:\tComment", %{socket: socket} do
@@ -30,7 +30,7 @@ defmodule ExonTest do
 
     with {:ok, response} <- :gen_tcp.recv(socket, 0),
          {:ok, data}    <- Poison.decode(response),
-         do: assert %{"data" => 3, "message" => "New comment added.",
+         do: assert %{"data" => 3, "message" => "New comment added",
                       "status" => "success"} == data
   end
 
@@ -51,7 +51,7 @@ defmodule ExonTest do
                       "status" => "error"} = data
   end
 
-  test "Protcol Validation:\t `add` request", %{socket: socket} do
+  test "Protocol Validation:\t `add` request", %{socket: socket} do
     :ok = :gen_tcp.send(socket, ~s(add name="Fusion engine"::comments="Could explode at any time."\n))
      with {:ok, response} <- :gen_tcp.recv(socket, 0),
           {:ok, data}     <- Poison.decode(response),

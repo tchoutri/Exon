@@ -9,9 +9,10 @@ import Ecto.Query
 
   def start_link, do: GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
 
-  def get_id(id) when is_binary(id), do:  GenServer.call(__MODULE__, {:get_id, id})
-  def add_new_id(name, comments), do: GenServer.call(__MODULE__, {:add_new_id, name, comments})
-  def add_new_comment(id, comments),   do: GenServer.call(__MODULE__, {:add_new_comment, id, comments})
+  def get_id(id) when is_binary(id),  do: GenServer.call __MODULE__, {:get_id, id}
+  def add_new_id(name, comments),     do: GenServer.call __MODULE__, {:add_new_id, name, comments}
+  def add_new_comment(id, comments),  do: GenServer.call __MODULE__, {:add_new_comment, id, comments}
+  def remove_item(id),                do: GenServer.cast __MODULE__, {:remove, id}
 
 ###########
 # GenServer API
@@ -35,6 +36,13 @@ import Ecto.Query
   def handle_call({:add_new_comment, id, new_comments}, _from, :ok) do
     result = comment(id, new_comments)
     {:reply, result, :ok}
+  end
+
+  def handle_cast({:remove, id}, :ok) do
+   id = String.to_integer(id)
+   item = Repo.get!(Item, id)
+   Repo.delete!(item)
+   {:noreply, :ok}
   end
 
 ###########
@@ -83,7 +91,7 @@ import Ecto.Query
   defp parse_informations({:ok, item}) do
     date = item.inserted_at |> Ecto.DateTime.to_string
     %{:status => :success,
-      :message => "Item is available.",
+      :message => "Item is available",
       :data => %{
         :name => item.name,
         :id => item.id,
@@ -95,7 +103,7 @@ import Ecto.Query
 
   defp parse_informations({:error, :id_not_found, id}) do
     %{:status => :error,
-      :message => "Item not found.",
+      :message => "Item not found",
       :data => %{
         :name => "",
         :id   => id,
