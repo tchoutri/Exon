@@ -12,3 +12,9 @@ config :logger, level: :info
 config :exon, Exon.Repo,
   adapter: Sqlite.Ecto,
   database: "priv/test.sqlite3"
+
+config :exon,
+  port: 8878,
+  bindto: {127,0,0,1}
+
+

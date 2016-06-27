@@ -33,6 +33,10 @@ config :logger, :console, format: "[$level] $message\n"
 # and calculating stacktraces is usually expensive.
 config :phoenix, :stacktrace_depth, 20
 
+config :exon,
+  port: 8878,
+  bindto: {192, 168, 1, 39}
+
 # Configure your database
 config :exon, Exon.Repo,
   adapter: Sqlite.Ecto,

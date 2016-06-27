@@ -1,5 +1,5 @@
 defmodule Exon.Repo.Migrations.ItemComments do
-  use Ecto.Migration
+ use Ecto.Migration
 
   def change do
     alter table(:items) do

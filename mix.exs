@@ -36,7 +36,7 @@ defmodule Exon.Mixfile do
      {:sqlite_ecto, "~> 1.0"},
      {:phoenix_html, "~> 2.3"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
-     {:combine, "~> 0.5"},
+     {:combine, "~> 0.9"},
      {:gettext, "~> 0.9"},
      {:cowboy, "~> 1.0"}]
   end
