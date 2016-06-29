@@ -1,6 +1,6 @@
-=====================================
+==============================================
 Exon 2 |travis| |elixir| |license| |hexfaktor|
-=====================================
+==============================================
 
 Exon is a “mess manager” developed in Elixir_ and provides a simple API to manage & document your stuff. And by that I mean "physical stuff".
 
