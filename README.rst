@@ -1,5 +1,5 @@
 =====================================
-Exon 2 |elixir| |license| |hexfaktor|
+Exon 2 |travis| |elixir| |license| |hexfaktor|
 =====================================
 
 Exon is a “mess manager” developed in Elixir_ and provides a simple API to manage & document your stuff. And by that I mean "physical stuff".
@@ -77,6 +77,10 @@ The authentication system should be implementing the following architecture goal
 .. _`config file`: config/config.exs
 .. _`Guide to Authentication`: https://www.owasp.org/index.php/Guide_to_Authentication
 .. _timeout: https://www.owasp.org/index.php/Guide_to_Authentication#Suggested_Timeouts
+
+.. |travis| image:: https://travis-ci.org/tchoutri/Exon.svg?branch=master
+		    :target: https://travis-ci.org/tchoutri/Exon
+		    :alt: Travis CI build on Master branch
 
 .. |elixir| image:: https://cdn.rawgit.com/tchoutri/Exon/master/elixir.svg
             :target: http://elixir-lang.org
