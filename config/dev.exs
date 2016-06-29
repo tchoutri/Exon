@@ -35,7 +35,7 @@ config :phoenix, :stacktrace_depth, 20
 
 config :exon,
   port: 8878,
-  bindto: {192, 168, 1, 39}
+  bindto: {0, 0, 0, 0}
 
 # Configure your database
 config :exon, Exon.Repo,
