@@ -12,9 +12,9 @@ require Logger
     children = [
       supervisor(Exon.Endpoint, []),
       supervisor(Exon.Repo, []),
-      worker(Exon.Server, [], restart: :permanent),
-      worker(Exon.Listener, [], restart: :permanent),
+      supervisor(Exon.TCP.Listener, [], restart: :permanent),
       worker(Exon.Database, [], restart: :permanent),
+      worker(Exon.Server, [], restart: :permanent),
     ]
     supervise(children, strategy: :one_for_one)
   end

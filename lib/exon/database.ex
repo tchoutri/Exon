@@ -24,18 +24,44 @@ import Ecto.Query
   end
 
   def handle_call({:get_id, id}, _from, :ok) do
-    result = (id |> String.strip |> String.to_integer) |> get_id_informations |> parse_informations
+    result = (id |> String.strip |> String.to_integer) |> get_id_informations |> parse_informations |> Poison.encode!
     {:reply, result, :ok}
   end
 
   def handle_call({:add_new_id, name, comments}, _from, :ok) do
     result = name |> check_duplicate |> record(name, comments)
-    {:reply, result, :ok}
+    message = case result do
+      {:ok, id} ->
+        %{:status => :success,
+          :message => "New item registered",
+          :data => id
+          } |> Poison.encode!
+      {:duplicate, id} ->
+        %{:status => :error,
+          :message => "Item already exists",
+          :data => id
+          } |> Poison.encode!
+    end
+
+    {:reply, message, :ok}
   end
 
   def handle_call({:add_new_comment, id, new_comments}, _from, :ok) do
     result = comment(id, new_comments)
+    case result do
+      {:ok, :added} ->
+        %{:status => :success,
+          :message => "New comment added",
+          :data => id
+          } |> Poison.encode!
+
+      {:error, msg} ->
+        %{:status => :error,
+          :message => msg,
+          :data => id
+         } |> Poison.encode!
     {:reply, result, :ok}
+    end
   end
 
   def handle_cast({:remove, id}, :ok) do
