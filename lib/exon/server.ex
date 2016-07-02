@@ -5,15 +5,26 @@ use GenServer
 require Logger
 alias Exon.Database
 
-  def start_link() do
-    GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
+  def start_link(socket) do
+    GenServer.start_link(__MODULE__, socket, [])
   end
 
-  def start_session(socket),      do: {:ok, spawn(fn -> handle_session(socket) end)}
-  def handle_session(socket),     do: GenServer.call(Socket, {:handle, socket})
-  def get_id(id),                 do: GenServer.call(Server, {:id, id})
-  def new_item(name, comments),   do: GenServer.call(Server, {:item, {name, comments}})
-  def new_comment(id, comments),  do: GenServer.call(Server, {:add_new_comment, id, comments}) 
+  def init(socket) do
+    Logger.debug "Started a server with PID #{inspect self}"
+    spawn fn -> start_session(socket) end
+    {:ok, socket}
+  end
+
+  def start_session(socket) do 
+    Logger.debug("Handling session for #{inspect socket}")
+    handle_session(socket)
+  end
+
+  def handle_session(socket),     do: GenServer.call(self, {:handle, socket})
+
+  def get_id(id),                 do: GenServer.call(self, {:id, id})
+  def new_item(name, comments),   do: GenServer.call(self, {:item, {name, comments}})
+  def new_comment(id, comments),  do: GenServer.call(self, {:add_new_comment, id, comments}) 
   def protocol do
     %{:status => :error,
       :message => "Protocol error, please refer to the documentation",
@@ -21,13 +32,9 @@ alias Exon.Database
     } |> Poison.encode!
   end
 
-  def init(:ok) do
-    Logger.info(IO.ANSI.green <> "Server started." <> IO.ANSI.reset)
-    {:ok, :ok}
-  end
-
   def handle_call({:handle, socket}, _from, state) do
-    Logger.debug("Session handled for #{socket}")
+    Logger.debug("Session handled for #{inspect socket}")
+    Logger.debug("State is #{inspect state}")
     :timer.sleep(10000)
     {:ok, state}
   end

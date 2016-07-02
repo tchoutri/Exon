@@ -24,9 +24,14 @@ defmodule Exon.TCP.Acceptor do
   end
 
   def accept(l_socket, socket) do
-    case Exon.Server.start_session(socket) do
-      {:ok, pid} -> :gen_tcp.controlling_process(socket, pid)
-      error      -> Logger.error "Acceptor failed to start session (#{inspect error}), closing socket."
+    case Exon.Server.start_link(socket) do
+      {:ok, pid} ->
+        :ok = :gen_tcp.controlling_process(socket, pid)
+        Logger.debug "Delegated connection socket #{inspect socket} to #{inspect pid}"
+
+      error ->
+        Logger.error "Acceptor failed to start session (#{inspect error}), closing socket."
+        :gen_tcp.close(socket)
     end
 
     do_listen(l_socket)
