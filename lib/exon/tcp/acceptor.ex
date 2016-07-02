@@ -7,6 +7,7 @@ defmodule Exon.TCP.Acceptor do
   end
 
   def init(l_socket)do
+    Logger.info(IO.ANSI.green <> "Acceptor started." <> IO.ANSI.reset)
     GenServer.cast(__MODULE__, :listen)
     {:ok, l_socket}
   end

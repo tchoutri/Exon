@@ -6,7 +6,7 @@ require Logger
 alias Exon.Database
 
   def start_link() do
-    GenServer.start_link(__MODULE__, :ok, name: Server)
+    GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
   end
 
   def start_session(socket),      do: {:ok, spawn(fn -> handle_session(socket) end)}
@@ -15,11 +15,10 @@ alias Exon.Database
   def new_item(name, comments),   do: GenServer.call(Server, {:item, {name, comments}})
   def new_comment(id, comments),  do: GenServer.call(Server, {:add_new_comment, id, comments}) 
   def protocol do
-    message = %{:status => :error,
-                :message => "Protocol error, please refer to the documentation",
-                :data => nil
-              } |> Poison.encode!
-    message <> "\n"
+    %{:status => :error,
+      :message => "Protocol error, please refer to the documentation",
+      :data => nil
+    } |> Poison.encode!
   end
 
   def init(:ok) do
@@ -29,6 +28,7 @@ alias Exon.Database
 
   def handle_call({:handle, socket}, _from, state) do
     Logger.debug("Session handled for #{socket}")
+    :timer.sleep(10000)
     {:ok, state}
   end
 

@@ -5,7 +5,7 @@ use Supervisor
 require Logger
 
   def start_link() do
-    Supervisor.start_link(__MODULE__, [], name: Listener)
+    Supervisor.start_link(__MODULE__, [], name: __MODULE__)
   end
 
   def init([]) do
@@ -21,6 +21,7 @@ require Logger
   end
 
   def create_listen_socket(port,address) do
+    Logger.debug "Creating listening socket"
     :gen_tcp.listen(port, [{:ip, address}, :binary, packet: :line, active: false, reuseaddr: true])
   end
 
