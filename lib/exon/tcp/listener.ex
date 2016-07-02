@@ -21,7 +21,7 @@ require Logger
   end
 
   def create_listen_socket(port,address) do
-    {:ok, l_socket} = :gen_tcp.listen(port, [{:ip, address}, :binary, packet: :line, active: false, reuseaddr: true])
+    {:ok, l_socket} = :gen_tcp.listen(port, [{:ip, address}, :binary, packet: :line, active: true, reuseaddr: true])
     Logger.debug "Created listening socket #{inspect l_socket}"
     {:ok, l_socket}
   end
