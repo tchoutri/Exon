@@ -10,14 +10,24 @@ alias Exon.Database
   end
 
   def get_id(id), do: GenServer.call(Server, {:id, id})
-  def new_item(name, comments), do: GenServer.call(Server, {:item, {name, comments}})
-  def new_comment(id, comments), do: GenServer.call(Server, {:add_new_comment, id, comments}) 
+  def new_item(name, comments, client), do: GenServer.call(Server, {:new_item, name, comments, client})
+  def new_comment(id, comments), do: GenServer.call(Server, {:new_comment, id, comments}) 
+  def auth_user(credentials), do: GenServer.call(Server, {:auth, credentials})
+  def remove_item(:authed, id), do: GenServer.call(Server, {:remove_item, id})
+  def remove_item(:non_authed, id) do
+    m = %{status: :error,
+      message: "Unauthorized action - User not logged in",
+      data: id
+    } |> Poison.encode!
+    m <> "\n"
+  end
+
   def protocol do
-    message = %{:status => :error,
+    m = %{:status => :error,
                 :message => "Protocol error, please refer to the documentation",
                 :data => nil
               } |> Poison.encode!
-    message <> "\n"
+    m <> "\n"
   end
 
   def init(:ok) do
@@ -25,8 +35,8 @@ alias Exon.Database
     {:ok, :ok}
   end
 
-  def handle_call({:item, {name, comments}}, _from, state) do
-    message = case Database.add_new_id(name, comments) do
+  def handle_call({:new_item, name, comments, client}, _from, state) do
+    message = case Database.add_new_id(name, comments, client) do
       {:ok, id} ->
         %{:status => :success,
           :message => "New item registered",
@@ -39,15 +49,15 @@ alias Exon.Database
           :data => id
           } |> Poison.encode!
     end
-    {:reply, message <> "\n\n", state}
+    {:reply, message <> "\n", state}
   end
 
   def handle_call({:id, id}, _from, state) do
     message = id |> Database.get_id |> Poison.encode!
-    {:reply, message, state}
+    {:reply, message <> "\n", state}
   end
 
-  def handle_call({:add_new_comment, id, comments}, _from, state) do
+  def handle_call({:new_comment, id, comments}, _from, state) do
     message = case Database.add_new_comment(id, comments) do
       {:ok, :added} ->
         %{:status => :success,
@@ -63,5 +73,42 @@ alias Exon.Database
       _ -> nil
     end
     {:reply, message <> "\n", state}
+  end
+
+  def handle_call({:auth, credentials}, _from, state) do
+    result = case Aeacus.authenticate %{identity: credentials[:identity], password: credentials[:passwd]} do
+      {:ok, user}       -> 
+        Logger.debug "Sucessful authentication for " <> user.username
+        msg = %{status: :success,
+                message: "Successful authentication",
+                data: user.username
+              } |> Poison.encode!
+        {:ok, user, msg}
+
+      {:error, error} -> 
+        msg = %{status: :error,
+                message: "Login failed; Invalid user ID or password",
+                data: credentials[:identity]
+              } |> Poison.encode!
+
+        Logger.warn "Failed login for " <> credentials[:identity]
+        {:error, error, msg}
+    end
+    {:reply, result, state}
+  end
+
+  def handle_call({:remove_item, id}, _from, state) do
+    msg = case Database.remove_item(id) do
+    :error -> %{status: :error,
+                message: "Non-existing item",
+                data: id
+            } |> Poison.encode!
+ 
+    :ok ->  %{status: :success,
+              message: "Item successfully deleted",
+              data: id
+            } |> Poison.encode!
+    end
+    {:reply, msg, state}
   end
 end

@@ -17,7 +17,7 @@ defmodule Exon.Mixfile do
   def application do
     [mod: {Exon, []},
      applications: [:phoenix, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :sqlite_ecto]]
+                    :phoenix_ecto, :sqlite_ecto, :comeonin]]
   end
 
   # Specifies which paths to compile per environment.
@@ -33,6 +33,7 @@ defmodule Exon.Mixfile do
      {:phoenix, "~> 1.1"},
      {:phoenix_ecto, "~> 2.0"},
      {:qrcode, git: "https://gitlab.com/Pacodastre/qrcode"},
+     {:aeacus, "~> 0.3.0"},
      {:sqlite_ecto, "~> 1.0"},
      {:phoenix_html, "~> 2.3"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},

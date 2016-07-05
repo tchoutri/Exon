@@ -61,14 +61,14 @@ An authenticated user would be allowed to:
 
 The authentication system should be implementing the following architecture goals (mostly taken from OWASP's `Guide to Authentication`_):
 
-* Credentials transmitted over an encrypted link (thanks ``stunnel``)
-* Hashing and Salting / NO PLAINTEXT!!!!
+* Credentials transmitted over an encrypted link (thanks ``stunnel``) **done**
+* Hashing and Salting / NO PLAINTEXT!!!! **done**
 * Returning the date & time of last time they logged in
 * Enforce password complexity
 * Password should be easy to change
-* Only return “Login failed; Invalid user ID or password” in case of login failure
+* Only return “Login failed; Invalid user ID or password” in case of login failure **done**
 * Still in case of repetedly login failure, activate a timeout_ and a ban.
-* Don't rely on the client's IP address / hostname because they can be faked/spoofed.
+* Don't rely on the client's IP address / hostname because they can be faked/spoofed. **done** (it is only shown, not used)
 
 
 

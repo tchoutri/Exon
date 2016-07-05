@@ -1,28 +1,53 @@
 defmodule ExonTest do
   use ExUnit.Case, async: true
 
+  alias Exon.{User,Client,Repo}
   setup do
-     {:ok, socket} = :gen_tcp.connect('localhost', 8878, [:binary, active: false])
+    
+     {:ok, socket} = :gen_tcp.connect({0,0,0,0,0,0,0,1}, 8878, [:binary, active: false])
      {:ok, [socket: socket]}
   end
 
-  test "Protocol Validation:\tID", %{socket: socket} do
+  test "Protocol Validation:\tRequesting an ID", %{socket: socket} do
     :ok = :gen_tcp.send(socket, "id 1\n")
 
-    with {:ok, response} <- :gen_tcp.recv(socket, 0),
-         {:ok, data}    <- Poison.decode(response),
-         do: assert %{"data" => %{"comments" => "•This is a comment", "date" => _,
-                                 "id" => 1, "name" => "Test1"}, "message" => "Item is available",
-                                 "status" => "success"} = data
+    {:ok, json} = :gen_tcp.recv(socket, 0)
+    {:ok, response} = Poison.decode(json)
+      assert response["data"]["comments"] == "This is a comment"
+      assert response["data"]["id"]       == 1
+      assert response["data"]["name"]     == "Test1"
+      assert response["data"]["author"]   == "anon"
+      assert response["message"]          == "Item is available"
+      assert response["status"]           == "success"
   end
 
   test "Protocol Validation:\tChecking non-existing ID", %{socket: socket} do
-   :ok = :gen_tcp.send(socket, "id 324234\n")
+    :ok = :gen_tcp.send(socket, "id 324234\n")
 
-   with {:ok, response} <- :gen_tcp.recv(socket, 0),
-        {:ok, data}     <- Poison.decode(response),
-        do: assert %{"data" => %{"comments" => "", "date" => "", "id" => 324234, "name" => ""},
-                      "message" => "Item not found", "status" => "error"} == data
+    {:ok, json} = :gen_tcp.recv(socket, 0)
+    {:ok, response} = Poison.decode(json)
+      assert response["data"]["id"] == 324234
+      assert response["status"]     == "error"
+      assert response["message"]    == "Item not found"
+  end
+
+  test "Protocol Validation:\tAuthentication request", %{socket: socket} do
+    :ok = :gen_tcp.send(socket, ~s(auth username="nixon"::passwd="hunter2"\n))
+    {:ok, json} = :gen_tcp.recv(socket, 0)
+    {:ok, response} = Poison.decode(json)
+      assert response["status"]  == "success"
+      assert response["message"] == "Successful authentication"
+      assert response["data"]    == "nixon"
+  end
+
+  test "Protocol Validation:\tFailed authentication request", %{socket: socket} do
+    :ok = :gen_tcp.send(socket, ~s(auth username="clinton"::passwd="hunter3"\n))
+    {:ok, json} = :gen_tcp.recv(socket, 0)
+    {:ok, response} = Poison.decode(json)
+
+    assert response["status"]  == "error"
+    assert response["message"] == "Login failed; Invalid user ID or password"
+    assert response["data"]    == "clinton"
   end
 
   test "Protocol Validation:\tComment", %{socket: socket} do
@@ -51,7 +76,7 @@ defmodule ExonTest do
                       "status" => "error"} = data
   end
 
-  test "Protocol Validation:\t `add` request", %{socket: socket} do
+  test "Protocol Validation:\tAdding a new item", %{socket: socket} do
     :ok = :gen_tcp.send(socket, ~s(add name="Fusion engine"::comments="Could explode at any time."\n))
      with {:ok, response} <- :gen_tcp.recv(socket, 0),
           {:ok, data}     <- Poison.decode(response),
@@ -71,5 +96,23 @@ defmodule ExonTest do
          {:ok, data}     <- Poison.decode(response),
          do: assert %{"data" => nil, "message" => "Protocol error, please refer to the documentation",
                       "status" => "error"} == data
+  end
+
+  test "Internals:\tDeleting an item", %{socket: _socket} do
+    {:ok, response} = Exon.Server.new_item("Soon-to-be-removed-item", "nothing to say.", %Client{}) |> Poison.decode
+    {:ok, data}     = Exon.Server.remove_item(:authed, "#{response["data"]}") |> Poison.decode
+      assert data["status"]  == "success"
+      assert data["message"] == "Item successfully deleted"
+  end
+
+  test "Internals:\tDeleting a user", %{socket: _socket} do
+    %User{username: "kennedy", hashed_password: "lol"} |> Repo.insert!
+      assert Exon.Database.remove_user("kennedy") == :ok
+  end
+
+  test "Internals:\tChanging a user's password", %{socket: _socket} do
+    %User{username: "bush", hashed_password: "mdr"} |> Repo.insert!
+    hpass = Aeacus.hashpwsalt("ptdr")
+      assert Exon.Database.change_passwd("bush", hpass) == :ok
   end
 end

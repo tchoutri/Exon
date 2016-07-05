@@ -1,10 +1,10 @@
 defmodule Exon.Item do
-@moduledoc false
   use Ecto.Model
 
   schema "items" do
     field :name, :string
     field :comments, :string, [default: "", null: false]
+    field :author, :string, [default: "anon", null: false]
     timestamps
   end
 

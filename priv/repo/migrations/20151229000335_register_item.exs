@@ -4,6 +4,7 @@ defmodule Exon.Repo.Migrations.RegisterItem do
   def change do
     create table(:items) do
       add :name, :string
+      add :author, :string
       timestamps
     end
   end
