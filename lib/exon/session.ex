@@ -48,15 +48,14 @@ defmodule Exon.Session do
   def handle_cast({:parse_auth, info, client}, state) do
     updated_client = case Combine.parse(info, parser) do
       [[{"username", username}, {"passwd", passwd}]] ->
-        case %{identity: username, passwd: passwd} |> auth do
-          {:ok, user} ->
+        case %{identity: username, passwd: passwd} |> Exon.Server.auth_user do
+          {:ok, user, msg} ->
+            GenServer.cast(self, {:send_pkt, msg})
             %{client | authed: true, username: user.username}
-
-          {:error, msg} ->
-            Logger.warn msg
+          {:error, _error, msg} ->
+            GenServer.cast(self, {:send_pkt, msg})
             client
         end
-
       _ -> 
         GenServer.cast(self, {:send_pkt, Exon.Server.protocol})
         client
@@ -92,19 +91,6 @@ defmodule Exon.Session do
 #############
 # Backend API
 #############
-
-  @spec auth(map) :: {:ok, %Exon.Client{}} | {:error, String.t}
-  defp auth(credentials) when is_map(credentials) do
-    case Aeacus.authenticate %{identity: credentials[:identity], password: credentials[:passwd]} do
-      {:ok, user}       -> 
-        Logger.info "Sucessful authentication for " <> user.username
-        {:ok, user}
-      {:error, msg} -> 
-        Logger.warn "Failed login for " <> credentials[:identity]
-        Logger.info msg
-        {:error, msg}
-    end
-  end
 
   @spec handler(String.t, %Exon.Client{}) :: :ok | :ok
   defp handler(line, client) do

@@ -12,6 +12,7 @@ alias Exon.Database
   def get_id(id), do: GenServer.call(Server, {:id, id})
   def new_item(name, comments, client), do: GenServer.call(Server, {:new_item, name, comments, client})
   def new_comment(id, comments), do: GenServer.call(Server, {:new_comment, id, comments}) 
+  def auth_user(credentials), do: GenServer.call(Server, {:auth, credentials})
   def protocol do
     message = %{:status => :error,
                 :message => "Protocol error, please refer to the documentation",
@@ -63,5 +64,28 @@ alias Exon.Database
       _ -> nil
     end
     {:reply, message <> "\n", state}
+  end
+
+  def handle_call({:auth, credentials}, _from, state) do
+    result = case Aeacus.authenticate %{identity: credentials[:identity], password: credentials[:passwd]} do
+      {:ok, user}       -> 
+        Logger.debug "Sucessful authentication for " <> user.username
+        msg = %{status: :success,
+                message: "Successful authentication",
+                data: user.username
+              } |> Poison.encode!
+        {:ok, user, msg}
+
+      {:error, error} -> 
+        msg = %{status: :error,
+                message: "Login failed; Invalid user ID or password",
+                data: credentials[:identity]
+              } |> Poison.encode!
+
+        Logger.warn "Failed login for " <> credentials[:identity]
+        Logger.warn error
+        {:error, error, msg}
+    end
+    {:reply, result, state}
   end
 end
