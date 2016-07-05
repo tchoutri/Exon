@@ -16,7 +16,7 @@ The specs are located here_. Please tell me if something went wrong during their
 About the server
 ~~~~~~~~~~~~~~~~
 
-.. image:: http://i.imgur.com/8H4FoWk.png
+.. image:: http://i.imgur.com/vaYL3ij.png
            :width: 33%
 
 .. image:: http://i.imgur.com/wHFpRC6.png
