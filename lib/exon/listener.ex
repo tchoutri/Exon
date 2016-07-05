@@ -37,7 +37,7 @@ require Logger
     {:ok, ip} = :inet.parse_address(address)
     case tuple_size(ip) do
       4 -> :inet
-      6 -> :inet6
+      8 -> :inet6
     end
   end
 
