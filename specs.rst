@@ -35,8 +35,12 @@ There are for the moment a limited number of possible ``commands`` and ``subcomm
     * ``comments="Comments about the item"``
 
 - ``comment`` which takes the following keys:
-    * ``id=ID`` with ID being a natural integer strictly greater than 0 between two double quotes
+    * ``id="ID"`` with ID being a natural integer strictly greater than 0 between two double quotes
     * ``comments="Another comment"``.
+
+- ``auth`` which takes the following keys:
+    * ``username="USER"`` containing the username
+    * ``passwd="password"`` ← quite explicit, imo.
 
 For instance, a ``message`` requesting informations about a particular ID uses the ``id`` commandwill say::
 
@@ -44,7 +48,7 @@ For instance, a ``message`` requesting informations about a particular ID uses t
 
 - A ``message`` adding a new item to the database will say::
 
-    add new name="Fusion engine"::comments="Could explode at any time."
+    add name="Fusion engine"::comments="Could explode at any time."
 
 - A ``message`` adding a new comment to a particular item will say::
 
@@ -66,7 +70,8 @@ The fields of the JSON document are the following: ``name``, ``id``, ``date`` an
             "name": "Engine",
             "id": 1,
             "date": "2015-12-29 00:12:04",
-            "comments": "May explode."
+            "comments": "May explode.",
+            "author": "anon"
         }
     }
 
@@ -76,7 +81,7 @@ the date as it is returned by the command ``date "+%G-%m-%d %H:%M:%S"`` on UNIX-
 Item registering
 ----------------
 
-When registering a new item with the ``add new`` message, Exon will send this response::
+When registering a new item with the ``add`` message, Exon will send this response::
 
 
     {

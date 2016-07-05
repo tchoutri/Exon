@@ -25,9 +25,6 @@ config :exon, Exon.Endpoint,
     ]
   ]
 
-# Do not include metadata nor timestamps in development logs
-config :logger, :console, format: "[$level] $message\n"
-
 # Set a higher stacktrace during development.
 # Do not configure such in production as keeping
 # and calculating stacktraces is usually expensive.
@@ -35,9 +32,17 @@ config :phoenix, :stacktrace_depth, 20
 
 config :exon,
   port: 8878,
-  bindto: {0, 0, 0, 0}
+  bindto: '0.0.0.0'
 
 # Configure your database
+# config :exon, Exon.Repo.Items,
+#   adapter: Sqlite.Ecto,
+#   database: "priv/items.dev.sqlite3"
+
+# config :exon, Exon.Repo.Users,
+#   adapter: Sqlite.Ecto,
+#   database: "priv/users.dev.sqlite3"
+
 config :exon, Exon.Repo,
   adapter: Sqlite.Ecto,
   database: "priv/dev.sqlite3"

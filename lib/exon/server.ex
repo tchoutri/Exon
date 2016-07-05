@@ -10,8 +10,8 @@ alias Exon.Database
   end
 
   def get_id(id), do: GenServer.call(Server, {:id, id})
-  def new_item(name, comments), do: GenServer.call(Server, {:item, {name, comments}})
-  def new_comment(id, comments), do: GenServer.call(Server, {:add_new_comment, id, comments}) 
+  def new_item(name, comments, client), do: GenServer.call(Server, {:new_item, name, comments, client})
+  def new_comment(id, comments), do: GenServer.call(Server, {:new_comment, id, comments}) 
   def protocol do
     message = %{:status => :error,
                 :message => "Protocol error, please refer to the documentation",
@@ -25,8 +25,8 @@ alias Exon.Database
     {:ok, :ok}
   end
 
-  def handle_call({:item, {name, comments}}, _from, state) do
-    message = case Database.add_new_id(name, comments) do
+  def handle_call({:new_item, name, comments, client}, _from, state) do
+    message = case Database.add_new_id(name, comments, client) do
       {:ok, id} ->
         %{:status => :success,
           :message => "New item registered",
@@ -39,15 +39,15 @@ alias Exon.Database
           :data => id
           } |> Poison.encode!
     end
-    {:reply, message <> "\n\n", state}
+    {:reply, message <> "\n", state}
   end
 
   def handle_call({:id, id}, _from, state) do
     message = id |> Database.get_id |> Poison.encode!
-    {:reply, message, state}
+    {:reply, message <> "\n", state}
   end
 
-  def handle_call({:add_new_comment, id, comments}, _from, state) do
+  def handle_call({:new_comment, id, comments}, _from, state) do
     message = case Database.add_new_comment(id, comments) do
       {:ok, :added} ->
         %{:status => :success,

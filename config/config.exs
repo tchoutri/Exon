@@ -16,8 +16,17 @@ config :exon, Exon.Endpoint,
 
 # Configures Elixir's Logger
 config :logger, :console,
-  format: "$time $metadata[$level] $message\n",
+  format: "$time [$level] ~ $message\n",
   metadata: [:request_id]
+
+config :aeacus, Aeacus,
+  repo: Exon.Repo,
+  model: Exon.User,
+  # Optional, The following are the default options
+  crypto: Comeonin.Pbkdf2,
+  identity_field: :username,
+  password_field: :hashed_password,
+  error_message: "Invalid identity or password."
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
