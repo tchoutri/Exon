@@ -50,13 +50,15 @@ import Ecto.Query
   end
 
   def handle_call({:remove_user, username}, _from, state) do
-    query = from user in User, where: user.username == ^username, select: user.id
+    query = from user in User, where: user.username == ^username, select: user
     result = case Repo.all(query) do
       [] ->
         Logger.warn "No user matching username #{username}"
-      [id] ->
-        :ok = Repo.delete!(User, id)
-        Logger.info "Succesfully deleted account n°#{id} : #{username}"
+        :error
+      [user] ->
+        Logger.info "User #{username} has ID #{user.id}"
+        Repo.delete!(user)
+        Logger.info "Succesfully deleted account n°#{user.id} : #{username}"
     end
     {:reply, result, state}
   end

@@ -1,6 +1,7 @@
 defmodule ExonTest do
   use ExUnit.Case, async: true
 
+  alias Exon.{User,Client,Repo}
   setup do
     
      {:ok, socket} = :gen_tcp.connect({0,0,0,0,0,0,0,1}, 8878, [:binary, active: false])
@@ -98,9 +99,14 @@ defmodule ExonTest do
   end
 
   test "Internals:\t Deleting an item", %{socket: _socket} do
-    {:ok, response} = Exon.Server.new_item("Soon-to-be-removed-item", "nothing to say.", %Exon.Client{}) |> Poison.decode
+    {:ok, response} = Exon.Server.new_item("Soon-to-be-removed-item", "nothing to say.", %Client{}) |> Poison.decode
     {:ok, data}     = Exon.Server.remove_item(:authed, "#{response["data"]}") |> Poison.decode
       assert data["status"]  == "success"
       assert data["message"] == "Item successfully deleted"
+  end
+
+  test "Internals:\t Deleting a user", %{socket: _socket} do
+    %User{username: "kennedy", hashed_password: "lol"} |> Repo.insert!
+      assert Exon.Database.remove_user("kennedy") == :ok
   end
 end

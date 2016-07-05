@@ -92,7 +92,6 @@ alias Exon.Database
               } |> Poison.encode!
 
         Logger.warn "Failed login for " <> credentials[:identity]
-        Logger.warn error
         {:error, error, msg}
     end
     {:reply, result, state}
