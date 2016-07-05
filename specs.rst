@@ -99,10 +99,10 @@ When adding a new comment to an ID, Exon will send the following JSON document::
     {
         "status": "success",
         "message": "New comment added.",
-        "data": "<ID>"
+        "data": <ID>
     }
 
-Or if it fails, this:::
+Or if it fails, this::
 
     {
         "status": "error",
@@ -110,6 +110,16 @@ Or if it fails, this:::
         "data": <ID>
     }
 
+
+Authentication
+--------------
+The typical successful auth answer is::
+
+    {
+        "status": "success"
+        "message": "Successful authentication"
+        "data": "username"
+    }
 
 The worst that could happen
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -139,6 +149,18 @@ If you try to register an item with the same name as a previous one, the followi
         "status": "error",
         "message": "Item already exists",
         "data": 1
+    }
+
+Failed authentication
+---------------------
+
+
+If the authentication fails, you'll receive this message::
+
+    {
+        "status": "error"
+        "message": "Authentication failed"
+        "data": "username"
     }
 
 Protocol error

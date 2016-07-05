@@ -1,29 +1,33 @@
 defmodule ExonTest do
   use ExUnit.Case, async: true
-  alias Exon.Remote
 
   setup do
-     {:ok, socket} = :gen_tcp.connect('localhost', 8878, [:binary, active: false])
+    
+     {:ok, socket} = :gen_tcp.connect({0,0,0,0,0,0,0,1}, 8878, [:binary, active: false])
      {:ok, [socket: socket]}
   end
 
   test "Protocol Validation:\tRequesting an ID", %{socket: socket} do
     :ok = :gen_tcp.send(socket, "id 1\n")
 
-    with {:ok, response} <- :gen_tcp.recv(socket, 0),
-         {:ok, data}    <- Poison.decode(response),
-         do: assert %{"data" => %{"comments" => "•This is a comment", "date" => _,
-                                 "id" => 1, "name" => "Test1", "author" => "anon"}, "message" => "Item is available",
-                                 "status" => "success"} = data
+    {:ok, json} = :gen_tcp.recv(socket, 0)
+    {:ok, response} = Poison.decode(json)
+      assert response["data"]["comments"] == "This is a comment"
+      assert response["data"]["id"]       == 1
+      assert response["data"]["name"]     == "Test1"
+      assert response["data"]["author"]   == "anon"
+      assert response["message"]          == "Item is available"
+      assert response["status"]           == "success"
   end
 
   test "Protocol Validation:\tChecking non-existing ID", %{socket: socket} do
-   :ok = :gen_tcp.send(socket, "id 324234\n")
+    :ok = :gen_tcp.send(socket, "id 324234\n")
 
-   with {:ok, response} <- :gen_tcp.recv(socket, 0),
-        {:ok, data}     <- Poison.decode(response),
-        do: assert %{"data" => %{"comments" => "", "date" => "", "id" => 324234, "name" => "", "author" => ""},
-                      "message" => "Item not found", "status" => "error"} == data
+    {:ok, json} = :gen_tcp.recv(socket, 0)
+    {:ok, response} = Poison.decode(json)
+      assert response["data"]["id"]      == 324234
+      assert response["status"]  == "error"
+      assert response["message"] == "Item not found"
   end
 
   test "Protocol Validation:\tComment", %{socket: socket} do
