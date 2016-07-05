@@ -98,15 +98,21 @@ defmodule ExonTest do
                       "status" => "error"} == data
   end
 
-  test "Internals:\t Deleting an item", %{socket: _socket} do
+  test "Internals:\tDeleting an item", %{socket: _socket} do
     {:ok, response} = Exon.Server.new_item("Soon-to-be-removed-item", "nothing to say.", %Client{}) |> Poison.decode
     {:ok, data}     = Exon.Server.remove_item(:authed, "#{response["data"]}") |> Poison.decode
       assert data["status"]  == "success"
       assert data["message"] == "Item successfully deleted"
   end
 
-  test "Internals:\t Deleting a user", %{socket: _socket} do
+  test "Internals:\tDeleting a user", %{socket: _socket} do
     %User{username: "kennedy", hashed_password: "lol"} |> Repo.insert!
       assert Exon.Database.remove_user("kennedy") == :ok
+  end
+
+  test "Internals:\tChanging a user's password", %{socket: _socket} do
+    %User{username: "bush", hashed_password: "mdr"} |> Repo.insert!
+    hpass = Aeacus.hashpwsalt("ptdr")
+      assert Exon.Database.change_passwd("bush", hpass) == :ok
   end
 end

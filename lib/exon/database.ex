@@ -13,6 +13,7 @@ import Ecto.Query
   def add_new_comment(id, comments),      do: GenServer.call __MODULE__, {:add_new_comment, id, comments}
   def remove_item(id),                    do: GenServer.call __MODULE__, {:remove_item, id}
   def remove_user(username),              do: GenServer.call __MODULE__, {:remove_user, username}
+  def change_passwd(username, hpass),     do: GenServer.call __MODULE__, {:change_passwd, username, hpass}
 
 ###############
 # GenServer API
@@ -59,6 +60,18 @@ import Ecto.Query
         Logger.info "User #{username} has ID #{user.id}"
         Repo.delete!(user)
         Logger.info "Succesfully deleted account n°#{user.id} : #{username}"
+    end
+    {:reply, result, state}
+  end
+
+  def handle_call({:change_passwd, username, hpass}, _from, state) do
+    query = from user in User, where: user.username == ^username, select: user
+    result = with [user] <- Repo.all(query),
+          {:ok, _struct} <- Repo.update(%User{user | hashed_password: hpass}) do
+           Logger.info "Successfully changed password for user #{username}"
+    else
+      {:error, _changeset} -> Logger.error "Could not change password for user #{username}"
+      []                   -> Logger.error "User #{username} does not exist!"
     end
     {:reply, result, state}
   end
