@@ -13,12 +13,21 @@ alias Exon.Database
   def new_item(name, comments, client), do: GenServer.call(Server, {:new_item, name, comments, client})
   def new_comment(id, comments), do: GenServer.call(Server, {:new_comment, id, comments}) 
   def auth_user(credentials), do: GenServer.call(Server, {:auth, credentials})
+  def remove_item(:authed, id), do: GenServer.call(Server, {:remove_item, id})
+  def remove_item(:non_authed, id) do
+    m = %{status: :error,
+      message: "Unauthorized action - User not logged in",
+      data: id
+    } |> Poison.encode!
+    m <> "\n"
+  end
+
   def protocol do
-    message = %{:status => :error,
+    m = %{:status => :error,
                 :message => "Protocol error, please refer to the documentation",
                 :data => nil
               } |> Poison.encode!
-    message <> "\n"
+    m <> "\n"
   end
 
   def init(:ok) do
@@ -87,5 +96,20 @@ alias Exon.Database
         {:error, error, msg}
     end
     {:reply, result, state}
+  end
+
+  def handle_call({:remove_item, id}, _from, state) do
+    msg = case Database.remove_item(id) do
+    :error -> %{status: :error,
+                message: "Non-existing item",
+                data: id
+            } |> Poison.encode!
+ 
+    :ok ->  %{status: :success,
+              message: "Item successfully deleted",
+              data: id
+            } |> Poison.encode!
+    end
+    {:reply, msg, state}
   end
 end

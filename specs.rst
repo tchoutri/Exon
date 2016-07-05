@@ -87,9 +87,19 @@ When registering a new item with the ``add`` message, Exon will send this respon
     {
         "status": "success",
         "message": "New item registered",
-        "data": "<ID>"
+        "data": <ID>
     }
 
+Item suppression
+----------------
+
+When deleting an item, you'll receive the following response::
+
+    {
+        "status": "success",
+        "message": "Item successfully deleted",
+        "data:" ID
+    } 
 
 Adding a new comment
 --------------------
@@ -158,10 +168,23 @@ Failed authentication
 If the authentication fails, you'll receive this message::
 
     {
-        "status": "error"
-        "message": "Authentication failed"
+        "status": "error",
+        "message": "Authentication failed",
         "data": "username"
     }
+
+Failed item suppression
+-----------------------
+
+If an item suppression had to fail, the following message would be returned::
+
+    {
+        "status": "error",
+        "message": ERROR_MSG,
+        "data": ID
+    }
+
+``ERROR_MSG`` being either ``"Unauthorized action - User not logged in"`` or ``"Non-existing item"``
 
 Protocol error
 --------------

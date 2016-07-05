@@ -3,15 +3,16 @@ defmodule Exon.Database do
 
 use GenServer
 require Logger
-alias Exon.{Item,Repo}
+alias Exon.{Item,Repo,User}
 import Ecto.Query
 
   def start_link, do: GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
 
-  def get_id(id) when is_binary(id),  do: GenServer.call __MODULE__, {:get_id, id}
-  def add_new_id(name, comments, client),     do: GenServer.call __MODULE__, {:add_new_id, name, comments, client}
-  def add_new_comment(id, comments),  do: GenServer.call __MODULE__, {:add_new_comment, id, comments}
-  defp remove_item(id),                do: GenServer.cast __MODULE__, {:remove, id, client}
+  def get_id(id) when is_binary(id),      do: GenServer.call __MODULE__, {:get_id, id}
+  def add_new_id(name, comments, client), do: GenServer.call __MODULE__, {:add_new_id, name, comments, client}
+  def add_new_comment(id, comments),      do: GenServer.call __MODULE__, {:add_new_comment, id, comments}
+  def remove_item(id),                    do: GenServer.call __MODULE__, {:remove_item, id}
+  def remove_user(username),              do: GenServer.call __MODULE__, {:remove_user, username}
 
 ###############
 # GenServer API
@@ -37,11 +38,27 @@ import Ecto.Query
     {:reply, result, :ok}
   end
 
-  def handle_cast({:remove, id}, :ok) do
-   id = String.to_integer(id)
-   item = Repo.get!(Item, id)
-   Repo.delete!(item)
-   {:noreply, :ok}
+  def handle_call({:remove_item, id}, _from, state) do
+    id = String.to_integer(id)
+    result = case Repo.get(Item, id) do
+      nil ->
+        :error
+      item ->
+        Repo.delete!(item) && :ok
+    end
+    {:reply, result, state}
+  end
+
+  def handle_call({:remove_user, username}, _from, state) do
+    query = from user in User, where: user.username == ^username, select: user.id
+    result = case Repo.all(query) do
+      [] ->
+        Logger.warn "No user matching username #{username}"
+      [id] ->
+        :ok = Repo.delete!(User, id)
+        Logger.info "Succesfully deleted account n°#{id} : #{username}"
+    end
+    {:reply, result, state}
   end
 
 #############

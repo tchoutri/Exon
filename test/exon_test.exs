@@ -96,4 +96,11 @@ defmodule ExonTest do
          do: assert %{"data" => nil, "message" => "Protocol error, please refer to the documentation",
                       "status" => "error"} == data
   end
+
+  test "Internals:\t Deleting an item", %{socket: _socket} do
+    {:ok, response} = Exon.Server.new_item("Soon-to-be-removed-item", "nothing to say.", %Exon.Client{}) |> Poison.decode
+    {:ok, data}     = Exon.Server.remove_item(:authed, "#{response["data"]}") |> Poison.decode
+      assert data["status"]  == "success"
+      assert data["message"] == "Item successfully deleted"
+  end
 end

@@ -3,7 +3,7 @@ defmodule Exon.Session do
   use GenServer
   use Combine
   require Logger
-
+  alias Exon.Client
 
   def start_link(socket) do
     GenServer.start_link(__MODULE__, socket, [])
@@ -83,6 +83,17 @@ defmodule Exon.Session do
     {:noreply, state}
   end
 
+  def handle_cast({:remove, id}, client=state) do
+    result = if authed?(client) do
+      Exon.Server.remove_item(:authed, id)
+    else
+      Exon.Server.remove_item(:non_authed, id)
+    end
+
+    GenServer.cast(self, {:send_pkt, result})
+    {:noreply, state}
+  end
+
   def handle_cast({:send_pkt, msg}, client=state) do
     :gen_tcp.send(client.socket, msg)
     {:noreply, state}
@@ -92,12 +103,13 @@ defmodule Exon.Session do
 # Backend API
 #############
 
-  @spec handler(String.t, %Exon.Client{}) :: :ok | :ok
+  @spec handler(String.t, %Client{}) :: :ok | :ok
   defp handler(line, client) do
     case sanitize_linebreaks(line) do
       "id " <> id         -> GenServer.cast(self, {:id, id})
       "add " <> info      -> GenServer.cast(self, {:parse_add, info, client})
       "comment " <> info  -> GenServer.cast(self, {:comment, info})
+      "remove" <> id      -> GenServer.cast(self, {:remove, id})
       ""                  -> GenServer.cast(self, {:send_pkt, ""})
       _                   -> GenServer.cast(self, {:send_pkt, Exon.Server.protocol()})
     end
@@ -112,7 +124,7 @@ defmodule Exon.Session do
     end
   end
 
-  @spec parse_add(String.t, %Exon.Client{}) :: String.t | String.t
+  @spec parse_add(String.t, %Client{}) :: String.t | String.t
   defp parse_add(info, client) do
     case Combine.parse(info, parser) do
       [[{"name", name}, {"comments", comments}]] ->
@@ -132,7 +144,16 @@ defmodule Exon.Session do
     end
   end
 
-  @spec peer_infos(port) :: %Exon.Client{}
+  @spec authed?(%Client{}) :: true | false
+  defp authed?(client) do
+    if client.username == "anon" do
+      false
+    else
+      true
+    end
+  end
+
+  @spec peer_infos(port) :: %Client{}
   defp peer_infos(socket) do
     {:ok, {addr, remote_port}} = :inet.peername(socket)
     ip_string = List.to_string(:inet_parse.ntoa(addr))
@@ -140,7 +161,7 @@ defmodule Exon.Session do
       { :ok, { :hostent, hostname, _, _, _, _ } } -> List.to_string(hostname)
       { :error, _ } -> ip_string
     end
-    struct(%Exon.Client{}, %{socket: socket, ip: ip_string, host: host, port: remote_port, authed: false})
+    struct(%Client{}, %{socket: socket, ip: ip_string, host: host, port: remote_port, authed: false})
   end
 
   defp parser do
