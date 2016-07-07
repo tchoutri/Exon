@@ -65,9 +65,9 @@ The authentication system should be implementing the following architecture goal
 * Hashing and Salting / NO PLAINTEXT!!!! **done**
 * Returning the date & time of last time they logged in
 * Enforce password complexity
-* Password should be easy to change
+* Password should be easy to change **done**
 * Only return “Login failed; Invalid user ID or password” in case of login failure **done**
-* Still in case of repetedly login failure, activate a timeout_ and a ban.
+* In case of repetedly login failure, activate a timeout_ and a ban.
 * Don't rely on the client's IP address / hostname because they can be faked/spoofed. **done** (it is only shown, not used)
 
 
