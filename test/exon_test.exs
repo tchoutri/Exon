@@ -1,7 +1,7 @@
 defmodule ExonTest do
   use ExUnit.Case, async: true
 
-  alias Exon.{User,Client,Repo}
+  alias Exon.User
   setup do
     
      {:ok, socket} = :gen_tcp.connect({0,0,0,0,0,0,0,1}, 8878, [:binary, active: false])
@@ -96,23 +96,5 @@ defmodule ExonTest do
          {:ok, data}     <- Poison.decode(response),
          do: assert %{"data" => nil, "message" => "Protocol error, please refer to the documentation",
                       "status" => "error"} == data
-  end
-
-  test "Internals:\tDeleting an item", %{socket: _socket} do
-    {:ok, response} = Exon.Server.new_item("Soon-to-be-removed-item", "nothing to say.", %Client{}) |> Poison.decode
-    {:ok, data}     = Exon.Server.remove_item(:authed, "#{response["data"]}") |> Poison.decode
-      assert data["status"]  == "success"
-      assert data["message"] == "Item successfully deleted"
-  end
-
-  test "Internals:\tDeleting a user", %{socket: _socket} do
-    %User{username: "kennedy", hashed_password: "lol"} |> Repo.insert!
-      assert Exon.Database.remove_user("kennedy") == :ok
-  end
-
-  test "Internals:\tChanging a user's password", %{socket: _socket} do
-    %User{username: "bush", hashed_password: "mdr"} |> Repo.insert!
-    hpass = Aeacus.hashpwsalt("ptdr")
-      assert Exon.Database.change_passwd("bush", hpass) == :ok
   end
 end

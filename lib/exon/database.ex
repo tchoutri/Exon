@@ -20,24 +20,24 @@ import Ecto.Query
 # GenServer API
 ###############
 
-  def init(:ok) do
+  def init(state) do
     Logger.info(IO.ANSI.green <> "Database loaded." <> IO.ANSI.reset)
-    {:ok, :ok}
+    {:ok, state}
   end
 
-  def handle_call({:get_id, id}, _from, :ok) do
+  def handle_call({:get_id, id}, _from, state) do
     result = (id |> String.strip |> String.to_integer) |> get_id_informations |> parse_informations
-    {:reply, result, :ok}
+    {:reply, result, state}
   end
 
-  def handle_call({:add_new_id, name, comments, client}, _from, :ok) do
+  def handle_call({:add_new_item, name, comments, client}, _from, state) do
     result = name |> String.downcase |> String.capitalize |> check_duplicate |> record(name, comments, client.username)
-    {:reply, result, :ok}
+    {:reply, result, state}
   end
 
-  def handle_call({:add_new_comment, id, new_comments}, _from, :ok) do
+  def handle_call({:add_new_comment, id, new_comments}, _from, state) do
     result = comment(id, new_comments)
-    {:reply, result, :ok}
+    {:reply, result, state}
   end
 
   def handle_call({:remove_item, id}, _from, state) do
