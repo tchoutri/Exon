@@ -33,6 +33,7 @@ defmodule Exon.Mixfile do
      {:phoenix, "~> 1.1"},
      {:phoenix_ecto, "~> 2.0"},
      {:qrcode, git: "https://gitlab.com/Pacodastre/qrcode"},
+     {:unicode_char, "~> 0.6.0"},
      {:aeacus, "~> 0.3.0"},
      {:sqlite_ecto, "~> 1.0"},
      {:phoenix_html, "~> 2.3"},

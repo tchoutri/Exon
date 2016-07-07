@@ -64,7 +64,7 @@ The authentication system should be implementing the following architecture goal
 * Credentials transmitted over an encrypted link (thanks ``stunnel``) **done**
 * Hashing and Salting / NO PLAINTEXT!!!! **done**
 * Returning the date & time of last time they logged in
-* Enforce password complexity
+* Enforce password complexity **TBD**
 * Password should be easy to change **done**
 * Only return “Login failed; Invalid user ID or password” in case of login failure **done**
 * In case of repetedly login failure, activate a timeout_ and a ban.
