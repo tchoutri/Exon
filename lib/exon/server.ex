@@ -36,7 +36,7 @@ alias Exon.Database
   end
 
   def handle_call({:new_item, name, comments, client}, _from, state) do
-    message = case Database.add_new_id(name, comments, client) do
+    message = case Database.add_new_item(name, comments, client) do
       {:ok, id} ->
         %{:status => :success,
           :message => "New item registered",

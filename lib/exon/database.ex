@@ -8,12 +8,13 @@ import Ecto.Query
 
   def start_link, do: GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
 
-  def get_id(id) when is_binary(id),      do: GenServer.call __MODULE__, {:get_id, id}
-  def add_new_id(name, comments, client), do: GenServer.call __MODULE__, {:add_new_id, name, comments, client}
-  def add_new_comment(id, comments),      do: GenServer.call __MODULE__, {:add_new_comment, id, comments}
-  def remove_item(id),                    do: GenServer.call __MODULE__, {:remove_item, id}
-  def remove_user(username),              do: GenServer.call __MODULE__, {:remove_user, username}
-  def change_passwd(username, hpass),     do: GenServer.call __MODULE__, {:change_passwd, username, hpass}
+  def get_id(id) when is_binary(id),        do: GenServer.call __MODULE__, {:get_id, id}
+  def add_new_item(name, comments, client), do: GenServer.call __MODULE__, {:add_new_item, name, comments, client}
+  def add_new_comment(id, comments),        do: GenServer.call __MODULE__, {:add_new_comment, id, comments}
+  def add_new_user(username, password),     do: GenServer.call __MODULE__, {:add_new_user, username, password}
+  def remove_item(id),                      do: GenServer.call __MODULE__, {:remove_item, id}
+  def remove_user(username),                do: GenServer.call __MODULE__, {:remove_user, username}
+  def change_passwd(username, hpass),       do: GenServer.call __MODULE__, {:change_passwd, username, hpass}
 
 ###############
 # GenServer API
@@ -72,6 +73,21 @@ import Ecto.Query
     else
       {:error, _changeset} -> Logger.error "Could not change password for user #{username}"
       []                   -> Logger.error "User #{username} does not exist!"
+    end
+    {:reply, result, state}
+  end
+
+  def handle_call({:add_new_user, username, password}, _from, state) do
+    result = case NotQwerty123.PasswordStrength.strong_password?(password) do
+      true ->
+        Logger.debug("Password strong enough")
+        hpass = Comeonin.Pbkdf2.hashpwsalt(password)
+        %User{username: username, hashed_password: hpass} |> Repo.insert
+        Logger.debug("User #{username} registered!")
+        {:ok, :registered}
+      error_msg ->
+        Logger.warn(error_msg)
+        {:error, :weak_password}
     end
     {:reply, result, state}
   end
