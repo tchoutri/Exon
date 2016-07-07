@@ -53,22 +53,12 @@ What should be done
 Authentication
 ##############
 
-I am exploring my options about how to implement an authentication system for Exon.
-An authenticated user would be allowed to: 
+An authenticated user can register items with their name, and are able to remove items.
 
-* Remove comments
-* Remove items
+TODO:
 
-The authentication system should be implementing the following architecture goals (mostly taken from OWASP's `Guide to Authentication`_):
-
-* Credentials transmitted over an encrypted link (thanks ``stunnel``) **done**
-* Hashing and Salting / NO PLAINTEXT!!!! **done**
 * Returning the date & time of last time they logged in
-* Enforce password complexity **TBD**
-* Password should be easy to change **done**
-* Only return “Login failed; Invalid user ID or password” in case of login failure **done**
 * In case of repetedly login failure, activate a timeout_ and a ban.
-* Don't rely on the client's IP address / hostname because they can be faked/spoofed. **done** (it is only shown, not used)
 
 
 
