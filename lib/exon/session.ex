@@ -50,6 +50,7 @@ defmodule Exon.Session do
       [[{"username", username}, {"passwd", passwd}]] ->
         case %{identity: username, passwd: passwd} |> Exon.Server.auth_user do
           {:ok, user, msg} ->
+            Logger.debug(msg)
             GenServer.cast(self, {:send_pkt, msg})
             %{client | authed: true, username: user.username}
           {:error, _error, msg} ->
@@ -167,9 +168,13 @@ defmodule Exon.Session do
   defp parser do
     sep_by1(map(
       sequence([pair_left(word, char(?=)),
-        between(char(?"), word_of(~r/[\w.,!¡-‑–—@\s]/u), char(?"))
-      ]),
-      fn([key, value]) -> {key, value} end),
+        between(char(?"), word_of(~r/[\w.,!¡-‑–\X\p{S}—@\s]/u), char(?"))
+       #between(char(?"), word_of(~r/[\w\p{P}\p{Pc}\p{Pd}\p{Po}\p{S}\p{Sc}\X\s]/iu), char(?"))
+       #between(char(?"), word_of(~r/./u), char(?"))
+      ]), 
+        fn([key, value]) -> 
+          {key, value}
+        end),
       string("::")
     )
   end
