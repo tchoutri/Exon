@@ -7,4 +7,11 @@ defmodule Exon.User do
     timestamps
   end
 
+  @required_fields ["username", "hashed_password"]
+  @optional_fields ~w()
+
+   def changeset(user, params \\ :empty) do
+    user
+    |> cast(params, @required_fields, @optional_fields)
+  end
 end

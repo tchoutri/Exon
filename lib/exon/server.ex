@@ -32,7 +32,9 @@ alias Exon.Database
 
   def init(:ok) do
     Logger.info(IO.ANSI.green <> "Server started." <> IO.ANSI.reset)
-    {:ok, :ok}
+    io_device = File.open!("log/auth.log", [:append])
+    Agent.start(fn -> io_device end, name: :logfile)
+    {:ok, io_device}
   end
 
   def handle_call({:new_item, name, comments, client}, _from, state) do
@@ -76,8 +78,10 @@ alias Exon.Database
   end
 
   def handle_call({:auth, credentials}, _from, state) do
+    device = Agent.get(:logfile, fn(x) -> x end)
     result = case Aeacus.authenticate %{identity: credentials[:identity], password: credentials[:passwd]} do
       {:ok, user}       -> 
+        IO.puts(device, "Successful authentication for #{user.username}")
         Logger.debug "Sucessful authentication for " <> user.username
         msg = %{status: :success,
                 message: "Successful authentication",
@@ -91,6 +95,7 @@ alias Exon.Database
                 data: credentials[:identity]
               } |> Poison.encode!
 
+        IO.puts(device, "Failed login for #{credentials[:identity]}")
         Logger.warn "Failed login for " <> credentials[:identity]
         {:error, error, msg}
     end

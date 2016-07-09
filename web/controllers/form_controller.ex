@@ -2,7 +2,7 @@ defmodule Exon.FormController do
   use Exon.Web, :controller
 
   def index(conn, %{"comments" => comments, "name" => name}) do
-    case Exon.Database.add_new_id(name, comments, %Exon.User{}) do
+    case Exon.Database.add_new_item(name, comments, %Exon.User{}) do
       {:ok, id} ->
         conn |> put_flash(:info, "Item #{name} registered with id #{id}")
              |> render("index.html")

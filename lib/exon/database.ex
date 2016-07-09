@@ -68,10 +68,11 @@ import Ecto.Query
   def handle_call({:change_passwd, username, hpass}, _from, state) do
     query = from user in User, where: user.username == ^username, select: user
     result = with [user] <- Repo.all(query),
-          {:ok, _struct} <- Repo.update(%User{user | hashed_password: hpass}) do
+             changeset = Ecto.Changeset.change(user, hashed_password: hpass),
+          {:ok, _model} <- Repo.update(changeset) do
            Logger.info "Successfully changed password for user #{username}"
     else
-      {:error, _changeset} -> Logger.error "Could not change password for user #{username}"
+      {:error, changeset} -> Logger.error "Could not change password for user #{username} : #{inspect changeset}"
       []                   -> Logger.error "User #{username} does not exist!"
     end
     {:reply, result, state}
