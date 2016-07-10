@@ -12,7 +12,9 @@ config :exon, Exon.Endpoint,
   code_reloader: true,
   cache_static_lookup: false,
   check_origin: false,
-  watchers: [node: ["node_modules/brunch/bin/brunch", "watch", "--stdin"]]
+  watchers: [node: ["node_modules/brunch/bin/brunch", "watch", "--stdin",
+               cd: Path.expand("../", __DIR__)]]
+
 
 # Watch static and templates for browser reloading.
 config :exon, Exon.Endpoint,

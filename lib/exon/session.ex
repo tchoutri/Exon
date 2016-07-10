@@ -21,7 +21,6 @@ defmodule Exon.Session do
 ###############
 
   def handle_cast({:handle, client}, state) do
-    Logger.debug "Handling #{inspect client}"
     case :gen_tcp.recv(client.socket, 0 ,:infinity) do
       {:ok, "quit" <> _rst} ->
         Logger.debug("[#{inspect(self)}] #{client.host}:#{client.port} has quit")

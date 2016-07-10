@@ -16,9 +16,8 @@ defmodule Exon.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {Exon, []},
-     applications: [:phoenix, :phoenix_html, :cowboy, :logger,
-                    :phoenix_ecto, :sqlite_ecto, :comeonin,
-                    :not_qwerty123]]
+     applications: [:phoenix,:phoenix_ecto, :phoenix_html, :cowboy,
+                    :logger, :sqlite_ecto, :comeonin,:not_qwerty123]]
   end
 
   # Specifies which paths to compile per environment.
@@ -34,8 +33,8 @@ defmodule Exon.Mixfile do
      {:phoenix, "~> 1.1"},
      {:phoenix_ecto, "~> 2.0"},
      {:qrcode, git: "https://gitlab.com/Pacodastre/qrcode"},
-     {:not_qwerty123, "~> 1.2.0"},
-     {:aeacus, "~> 0.3.0"},
+     {:not_qwerty123, "~> 1.2"},
+     {:aeacus, "~> 0.3"},
      {:sqlite_ecto, "~> 1.0"},
      {:phoenix_html, "~> 2.3"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},

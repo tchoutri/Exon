@@ -79,9 +79,10 @@ alias Exon.Database
 
   def handle_call({:auth, credentials}, _from, state) do
     device = Agent.get(:logfile, fn(x) -> x end)
+    date = Ecto.DateTime.utc |> Ecto.DateTime.to_string
     result = case Aeacus.authenticate %{identity: credentials[:identity], password: credentials[:passwd]} do
       {:ok, user}       -> 
-        IO.puts(device, "Successful authentication for #{user.username}")
+        IO.puts(device, "[#{date}] Successful authentication for #{user.username}")
         Logger.debug "Sucessful authentication for " <> user.username
         msg = %{status: :success,
                 message: "Successful authentication",
@@ -95,7 +96,7 @@ alias Exon.Database
                 data: credentials[:identity]
               } |> Poison.encode!
 
-        IO.puts(device, "Failed login for #{credentials[:identity]}")
+        IO.puts(device, "[#{date}] Failed login for #{credentials[:identity]}")
         Logger.warn "Failed login for " <> credentials[:identity]
         {:error, error, msg}
     end

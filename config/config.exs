@@ -16,7 +16,7 @@ config :exon, Exon.Endpoint,
 
 # Configures Elixir's Logger
 config :logger, :console,
-  format: "$time [$level] ~ $message\n",
+  format: "$time [$level] $message\n",
   metadata: [:request_id]
 
 config :aeacus, Aeacus,
