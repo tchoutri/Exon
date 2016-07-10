@@ -26,4 +26,4 @@ erl_crash.dump
 
 /priv/stunnel.*
 
-/logs/*
+/log/*
