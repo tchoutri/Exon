@@ -14,7 +14,7 @@ defmodule ExonTest do
     {:ok, json} = :gen_tcp.recv(socket, 0)
     {:ok, response} = Poison.decode(json)
       assert response["data"]["comments"] == "This is a comment"
-      assert response["data"]["id"]       == 1
+      assert response["data"]["id"]       == "1"
       assert response["data"]["name"]     == "Test1"
       assert response["data"]["author"]   == "anon"
       assert response["message"]          == "Item is available"

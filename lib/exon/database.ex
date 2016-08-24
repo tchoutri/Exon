@@ -106,8 +106,7 @@ import Ecto.Query
   end
 
   # regarde la pipeline ligne 31 avant de te demander pourquoi _name et _comments sont là.
-  defp record({:duplicate, id}, _name, _comments, _username), do: {:duplicate, id}
-  defp record(:ok, name, comments, username) do
+  def record(:ok, name, comments, username) do
     name     = String.strip(name)  
     comments = String.strip(comments)
 
@@ -115,6 +114,8 @@ import Ecto.Query
 
     {:ok, item.id}
   end
+
+  def record({:duplicate, id}, _name, _comments, _username), do: {:duplicate, id}
 
   defp check_duplicate(name) do
     query = from item in Item, where: item.name == ^name, select: item
@@ -127,7 +128,7 @@ import Ecto.Query
   defp comment(id, new_comments) do
     query = from i in Exon.Item, where: i.id == ^id, select: i
     with [item] <- Repo.all(query),
-         comments = item.comments <> "\n•" <> new_comments,
+         comments = item.comments <> "\n" <> new_comments,
          {:ok, _model} <- Repo.update(Item.changeset(item, %{comments: comments})) do
       {:ok, :added}
     else
@@ -143,7 +144,7 @@ import Ecto.Query
       :data => %{
         :author => item.author,
         :name => item.name,
-        :id => item.id,
+        :id => Integer.to_string(item.id),
         :date => date,
         :comments => item.comments
       }

@@ -21,15 +21,18 @@ require Logger
   end
 
   defp accept(lsocket) do
-    {:ok, socket} = :gen_tcp.accept(lsocket)
-    case Exon.Session.start_link(socket) do
-      {:ok, pid} ->
-        :ok = :gen_tcp.controlling_process(socket, pid)
-      error ->
-        Logger.error "Could not start session (#{inspect error}), closing socket #{inspect socket}"
-        :gen_tcp.close(socket)
+    case :gen_tcp.accept(lsocket) do
+      {:error, :closed} -> Logger.warn "Closing the connection"
+      {:ok, socket}     ->
+        case Exon.Session.start_link(socket) do
+          {:ok, pid} ->
+            :gen_tcp.controlling_process(socket, pid)
+          {:error, reason} ->
+          Logger.error "Could not start session (#{inspect reason})"
+          Logger.error "Closing socket #{inspect socket}"
+          :gen_tcp.close(socket)
+        end
     end
-
     accept(lsocket)
   end
 
