@@ -6,4 +6,6 @@ otp_release:
   - 18.3
 
 script:
+  - mkdir log
+  - touch log/auth.log
   - mix test --trace
