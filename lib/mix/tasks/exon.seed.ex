@@ -16,7 +16,7 @@ defmodule Mix.Tasks.Exon.Seed do
     record(:ok, "Photon cannon", "Hey listen, the feds might or might not be looking for this stuff, so… take care, hun!",
                 "Fred")
 
-    add_new_user("Fred", "carabistouïlles8080")
+    add_new_user("Fred", "carabistouilles$8080")
   end
 
   def seed(:prod) do

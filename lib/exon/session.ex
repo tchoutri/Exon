@@ -167,9 +167,7 @@ defmodule Exon.Session do
   defp parser do
     sep_by1(map(
       sequence([pair_left(word, char(?=)),
-        between(char(?"), word_of(~r/[\w.,!¡-‑–\X\p{S}—@\s]/u), char(?"))
-       #between(char(?"), word_of(~r/[\w\p{P}\p{Pc}\p{Pd}\p{Po}\p{S}\p{Sc}\X\s]/iu), char(?"))
-       #between(char(?"), word_of(~r/./u), char(?"))
+        between(char(?"), word_of(~r/[\w\$\^\*.,!¡-‑–\X\p{S}—@\s]/u), char(?"))
       ]), 
         fn([key, value]) -> 
           {key, value}
