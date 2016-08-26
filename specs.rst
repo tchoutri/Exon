@@ -142,12 +142,7 @@ If you request a wrong item number, let's say 5, Exon will answer with the follo
     {
         "status": "error",
         "message": "Item not found.",
-        "data": {
-            "name": "",
-            "id": 5,
-            "date": "",
-            "comments": ""
-        }
+        "data": "5"
     }
 
 Duplicate item
@@ -158,7 +153,7 @@ If you try to register an item with the same name as a previous one, the followi
     {
         "status": "error",
         "message": "Item already exists",
-        "data": 1
+        "data": "1"
     }
 
 Failed authentication
@@ -181,7 +176,7 @@ If an item suppression had to fail, the following message would be returned::
     {
         "status": "error",
         "message": ERROR_MSG,
-        "data": ID
+        "data": "id" 
     }
 
 ``ERROR_MSG`` being either ``"Unauthorized action - User not logged in"`` or ``"Non-existing item"``

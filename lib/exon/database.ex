@@ -26,7 +26,10 @@ import Ecto.Query
   end
 
   def handle_call({:get_id, id}, _from, state) do
-    result = (id |> String.strip |> String.to_integer) |> get_id_informations |> parse_informations
+    result = id
+             |> process_id
+             |> get_id_informations
+             |> parse_informations
     {:reply, result, state}
   end
 
@@ -97,6 +100,7 @@ import Ecto.Query
 # Backend API
 #############
 
+  defp get_id_informations({:error, :not_an_int}), do: {:error, :not_an_int}
   defp get_id_informations(id) when is_integer(id) do
     query = from item in Item, where: item.id == ^id, select: item
     case Repo.all(query) do
@@ -105,7 +109,6 @@ import Ecto.Query
     end
   end
 
-  # regarde la pipeline ligne 31 avant de te demander pourquoi _name et _comments sont là.
   def record(:ok, name, comments, username) do
     name     = String.strip(name)  
     comments = String.strip(comments)
@@ -115,6 +118,7 @@ import Ecto.Query
     {:ok, item.id}
   end
 
+  # regarde la pipeline ligne 31 avant de te demander pourquoi _name et _comments sont là.
   def record({:duplicate, id}, _name, _comments, _username), do: {:duplicate, id}
 
   defp check_duplicate(name) do
@@ -153,14 +157,24 @@ import Ecto.Query
 
   defp parse_informations({:error, :id_not_found, id}) do
     %{:status => :error,
-      :message => "Item not found",
-      :data => %{
-        :author => "",
-        :name => "",
-        :id   => id,
-        :date => "",
-        :comments => ""
-      }
+      :message => "Item not found.",
+      :data => Integer.to_string(id)
     }
+  end
+
+  defp parse_informations({:error, :not_an_int}) do
+    %{status: :error,
+      message: "Not an integer.",
+      data: nil
+    }
+  end
+
+  defp process_id(id) when is_binary(id) do
+    try do
+      id |> String.strip |> String.to_integer
+    rescue 
+      _error ->
+        {:error, :not_an_int}
+    end
   end
 end
