@@ -26,18 +26,14 @@ defmodule ExonTest do
 
     {:ok, json} = :gen_tcp.recv(socket, 0)
     {:ok, response} = Poison.decode(json)
-      assert response["data"]["id"] == 324234
-      assert response["status"]     == "error"
-      assert response["message"]    == "Item not found"
+    assert response == %{"data" => "324234", "message" => "Item not found.", "status" => "error"}
   end
 
   test "Protocol Validation:\tAuthentication request", %{socket: socket} do
     :ok = :gen_tcp.send(socket, ~s(auth username="nixon"::passwd="hunter2"\n))
     {:ok, json} = :gen_tcp.recv(socket, 0)
     {:ok, response} = Poison.decode(json)
-      assert response["status"]  == "success"
-      assert response["message"] == "Successful authentication"
-      assert response["data"]    == "nixon"
+    assert response == %{"data" => "nixon", "message" => "Successful authentication", "status" => "success"}
   end
 
   test "Protocol Validation:\tFailed authentication request", %{socket: socket} do
