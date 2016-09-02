@@ -28,19 +28,21 @@ The separator between ``commands``, ``subcommands`` and ``key/value`` blocks is 
 
 There are for the moment a limited number of possible ``commands`` and ``subcommands``:
 
-- ``id`` which takes an integer as an argument.
+- ``id`` which takes an ID enclosed in double quotes as an argument
 
-- ``add`` which takes the following keys
+- ``add`` which takes the following argument
     * ``name="Name of the item"``
     * ``comments="Comments about the item"``
 
-- ``comment`` which takes the following keys:
+- ``comment`` which takes the following arguments:
     * ``id="ID"`` with ID being a natural integer strictly greater than 0 between two double quotes
     * ``comments="Another comment"``.
 
-- ``auth`` which takes the following keys:
+- ``auth`` which takes the following arguments:
     * ``username="USER"`` containing the username
     * ``passwd="password"`` ← quite explicit, imo.
+
+- ``del`` which takes th
 
 For instance, a ``message`` requesting informations about a particular ID uses the ``id`` commandwill say::
 

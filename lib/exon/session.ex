@@ -83,11 +83,11 @@ defmodule Exon.Session do
     {:noreply, state}
   end
 
-  def handle_cast({:remove, id}, client=state) do
+  def handle_cast({:del, id}, client=state) do
     result = if authed?(client) do
-      Exon.Server.remove_item(:authed, id)
+      Exon.Server.del_item(:authed, id)
     else
-      Exon.Server.remove_item(:non_authed, id)
+      Exon.Server.del_item(:non_authed, id)
     end
 
     GenServer.cast(self, {:send_pkt, result})
@@ -109,7 +109,7 @@ defmodule Exon.Session do
       "id " <> id         -> GenServer.cast(self, {:id, id})
       "add " <> info      -> GenServer.cast(self, {:parse_add, info, client})
       "comment " <> info  -> GenServer.cast(self, {:comment, info})
-      "remove" <> id      -> GenServer.cast(self, {:remove, id})
+      "del" <> id         -> GenServer.cast(self, {:del, id})
       ""                  -> GenServer.cast(self, {:send_pkt, ""})
       _                   -> GenServer.cast(self, {:send_pkt, Exon.Server.protocol()})
     end
@@ -164,10 +164,11 @@ defmodule Exon.Session do
     struct(%Client{}, %{socket: socket, ip: ip_string, host: host, port: remote_port, authed: false})
   end
 
-  defp parser do
+  def parser do
     sep_by1(map(
       sequence([pair_left(word, char(?=)),
-        between(char(?"), word_of(~r/[\w\$\^\*.,!¡-‑–\X\p{S}—@\s]/u), char(?"))
+        between(char(?"), word_of(~r/[\w\s\S\$\^\*.,!¡-‑–\X\p{S}—@]/u), char(?"))
+        #between(char(?"), word_of(~r/[\w\s]/u), char(?"))
       ]), 
         fn([key, value]) -> 
           {key, value}

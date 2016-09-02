@@ -13,8 +13,8 @@ alias Exon.Database
   def new_item(name, comments, client), do: GenServer.call(Server, {:new_item, name, comments, client})
   def new_comment(id, comments), do: GenServer.call(Server, {:new_comment, id, comments}) 
   def auth_user(credentials), do: GenServer.call(Server, {:auth, credentials})
-  def remove_item(:authed, id), do: GenServer.call(Server, {:remove_item, id})
-  def remove_item(:non_authed, id) do
+  def del_item(:authed, id), do: GenServer.call(Server, {:del_item, id})
+  def del_item(:non_authed, id) do
     m = %{status: :error,
       message: "Unauthorized action - User not logged in",
       data: id
@@ -103,8 +103,8 @@ alias Exon.Database
     {:reply, result, state}
   end
 
-  def handle_call({:remove_item, id}, _from, state) do
-    msg = case Database.remove_item(id) do
+  def handle_call({:del_item, id}, _from, state) do
+    msg = case Database.del_item(id) do
     :error -> %{status: :error,
                 message: "Non-existing item",
                 data: id

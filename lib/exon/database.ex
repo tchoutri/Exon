@@ -12,13 +12,13 @@ import Ecto.Query
   def add_new_item(name, comments, client), do: GenServer.call __MODULE__, {:add_new_item, name, comments, client}
   def add_new_comment(id, comments),        do: GenServer.call __MODULE__, {:add_new_comment, id, comments}
   def add_new_user(username, password),     do: GenServer.call __MODULE__, {:add_new_user, username, password}
-  def remove_item(id),                      do: GenServer.call __MODULE__, {:remove_item, id}
-  def remove_user(username),                do: GenServer.call __MODULE__, {:remove_user, username}
+  def del_item(id),                         do: GenServer.call __MODULE__, {:del_item, id}
+  def del_user(username),                   do: GenServer.call __MODULE__, {:del_user, username}
   def change_passwd(username, hpass),       do: GenServer.call __MODULE__, {:change_passwd, username, hpass}
 
-###############
-# GenServer API
-###############
+#################
+# GenServer API #
+#################
 
   def init(state) do
     Logger.info(IO.ANSI.green <> "Database loaded." <> IO.ANSI.reset)
@@ -43,7 +43,7 @@ import Ecto.Query
     {:reply, result, state}
   end
 
-  def handle_call({:remove_item, id}, _from, state) do
+  def handle_call({:del_item, id}, _from, state) do
     id = String.to_integer(id)
     result = case Repo.get(Item, id) do
       nil ->
@@ -54,7 +54,7 @@ import Ecto.Query
     {:reply, result, state}
   end
 
-  def handle_call({:remove_user, username}, _from, state) do
+  def handle_call({:del_user, username}, _from, state) do
     query = from user in User, where: user.username == ^username, select: user
     result = case Repo.all(query) do
       [] ->
@@ -96,9 +96,9 @@ import Ecto.Query
     {:reply, result, state}
   end
 
-#############
-# Backend API
-#############
+###############
+# Backend API #
+###############
 
   defp get_id_informations({:error, :not_an_int}), do: {:error, :not_an_int}
   defp get_id_informations(id) when is_integer(id) do
@@ -130,7 +130,7 @@ import Ecto.Query
   end
 
   defp comment(id, new_comments) do
-    query = from i in Exon.Item, where: i.id == ^id, select: i
+    query = from i in Item, where: i.id == ^id, select: i
     with [item] <- Repo.all(query),
          comments = item.comments <> "\n" <> new_comments,
          {:ok, _model} <- Repo.update(Item.changeset(item, %{comments: comments})) do
@@ -177,4 +177,11 @@ import Ecto.Query
         {:error, :not_an_int}
     end
   end
+
+###########
+# Helpers #
+###########
+
+  def list_accounts, do: (from user in User, select: user.username) |> Repo.all
+
 end
