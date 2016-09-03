@@ -4,7 +4,7 @@ defmodule InternalsTest do
 
   test "Internals:\tDeleting an item" do
     {:ok, response} = Exon.Server.new_item("Soon-to-be-removed-item", "nothing to say.", %Client{}) |> Poison.decode
-    {:ok, data}     = Exon.Server.remove_item(:authed, "#{response["data"]}") |> Poison.decode
+    {:ok, data}     = Exon.Server.del_item(:authed, "#{response["data"]}") |> Poison.decode
 
       assert data["status"]  == "success"
       assert data["message"] == "Item successfully deleted"
@@ -14,7 +14,7 @@ defmodule InternalsTest do
     hpass = Aeacus.hashpwsalt("lol")
     %User{username: "kennedy", hashed_password: hpass} |> Repo.insert!
 
-      assert Exon.Database.remove_user("kennedy") == :ok
+      assert Exon.Database.del_user("kennedy") == :ok
   end
 
   test "Internals:\tChanging a user's password" do
