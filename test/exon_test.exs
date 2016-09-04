@@ -51,7 +51,7 @@ defmodule ExonTest do
 
     with {:ok, response} <- :gen_tcp.recv(socket, 0),
          {:ok, data}    <- Poison.decode(response),
-         do: assert %{"data" => 3, "message" => "New comment added",
+         do: assert %{"data" => "3", "message" => "New comment added",
                       "status" => "success"} == data
   end
 
