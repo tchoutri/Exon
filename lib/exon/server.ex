@@ -42,13 +42,13 @@ alias Exon.Database
       {:ok, id} ->
         %{:status => :success,
           :message => "New item registered",
-          :data => id
+          :data => Integer.to_string(id)
           } |> Poison.encode!
 
       {:duplicate, id} ->
         %{:status => :error,
           :message => "Item already exists",
-          :data => id
+          :data => Integer.to_string(id)
           } |> Poison.encode!
     end
     {:reply, message <> "\n", state}
@@ -64,13 +64,13 @@ alias Exon.Database
       {:ok, :added} ->
         %{:status => :success,
           :message => "New comment added",
-          :data => id
+          :data => Integer.to_string(id)
           } |> Poison.encode!
 
       {:error, msg} ->
         %{:status => :error,
           :message => msg,
-          :data => id
+          :data => Integer.to_string(id)
          } |> Poison.encode!
       _ -> nil
     end
