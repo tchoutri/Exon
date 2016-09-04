@@ -48,4 +48,6 @@ require Logger
     {:ok, addr} = :inet.parse_address(address)
     addr
   end
+
+  def terminate(_raison, _state), do: :ok
 end
