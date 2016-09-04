@@ -1,6 +1,5 @@
 %{"aeacus": {:hex, :aeacus, "0.3.0", "9716ea5a339639647113ab777b9fd3dd443f7f13c4c2e9f60c55a6a717cd827c", [:mix], [{:comeonin, "~> 1.0", [hex: :comeonin, optional: false]}]},
   "bunt": {:hex, :bunt, "0.1.6", "5d95a6882f73f3b9969fdfd1953798046664e6f77ec4e486e6fafc7caad97c6f", [:mix], []},
-  "combine": {:hex, :combine, "0.9.2", "cd3c8721f378ebe032487d8a4fa2ced3181a456a3c21b16464da8c46904bb552", [:mix], []},
   "comeonin": {:hex, :comeonin, "1.6.0", "65d3217bf171feb2600ac639089d1316c5438407a30dfbe9f465d75500db2171", [:mix, :make, :make], [{:comeonin_i18n, "~> 0.1", [hex: :comeonin_i18n, optional: true]}]},
   "cowboy": {:hex, :cowboy, "1.0.4", "a324a8df9f2316c833a470d918aaf73ae894278b8aa6226ce7a9bf699388f878", [:rebar, :make], [{:cowlib, "~> 1.0.0", [hex: :cowlib, optional: false]}, {:ranch, "~> 1.0", [hex: :ranch, optional: false]}]},
   "cowlib": {:hex, :cowlib, "1.0.2", "9d769a1d062c9c3ac753096f868ca121e2730b9a377de23dec0f7e08b1df84ee", [:make], []},

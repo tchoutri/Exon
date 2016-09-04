@@ -1,7 +1,6 @@
 defmodule Exon.Session do
 
   use GenServer
-  use Combine
   require Logger
   alias Exon.Client
 
@@ -45,9 +44,9 @@ defmodule Exon.Session do
   end
 
   def handle_cast({:parse_auth, info, client}, state) do
-    updated_client = case Combine.parse(info, parser) do
-      [[{"username", username}, {"passwd", passwd}]] ->
-        case %{identity: username, passwd: passwd} |> Exon.Server.auth_user do
+    updated_client = case parse(info) do
+      {:ok, [username: username, passwd: password]} ->
+        case %{identity: username, passwd: password} |> Exon.Server.auth_user do
           {:ok, user, msg} ->
             Logger.debug(msg)
             GenServer.cast(self, {:send_pkt, msg})
@@ -105,6 +104,7 @@ defmodule Exon.Session do
 
   @spec handler(String.t, %Client{}) :: :ok | :ok
   defp handler(line, client) do
+    Logger.debug line
     case sanitize_linebreaks(line) do
       "id " <> id         -> GenServer.cast(self, {:id, id})
       "add " <> info      -> GenServer.cast(self, {:parse_add, info, client})
@@ -126,8 +126,8 @@ defmodule Exon.Session do
 
   @spec parse_add(String.t, %Client{}) :: String.t | String.t
   defp parse_add(info, client) do
-    case Combine.parse(info, parser) do
-      [[{"name", name}, {"comments", comments}]] ->
+    case parse(info) do
+      {:ok, [name: name, comments: comments]} ->
         Exon.Server.new_item(name, comments, client)
       _ ->
         Exon.Server.protocol
@@ -136,8 +136,8 @@ defmodule Exon.Session do
 
   @spec parse_comment(String.t) :: String.t | String.t
   defp parse_comment(info) do
-    case Combine.parse(info, parser) do
-      [[{"id", id}, {"comments", comments}]] ->
+    case parse(info) do
+      {:ok, [id: id, comments: comments]} ->
         Exon.Server.new_comment(String.to_integer(id), comments)
       _ ->
         Exon.Server.protocol
@@ -164,16 +164,19 @@ defmodule Exon.Session do
     struct(%Client{}, %{socket: socket, ip: ip_string, host: host, port: remote_port, authed: false})
   end
 
-  def parser do
-    sep_by1(map(
-      sequence([pair_left(word, char(?=)),
-        between(char(?"), word_of(~r/[\w\s\S\$\^\*.,!¡-‑–\X\p{S}—@]/u), char(?"))
-        #between(char(?"), word_of(~r/[\w\s]/u), char(?"))
-      ]), 
-        fn([key, value]) -> 
-          {key, value}
-        end),
-      string("::")
-    )
+  @spec parse(String.t) :: {:ok, Keyword.t} | {:error, :parse_error}
+  def parse(query) do
+    case Regex.scan(~r/(\w+)=\"([^\"]+)\"/, query, capture: :all_but_first) do
+      [[field1, result1], [field2, result2]] ->
+        {:ok,
+          [
+            {String.to_atom(field1), result1},
+            {String.to_atom(field2), result2}
+          ]
+        }
+
+      _ -> {:error, :parse_error}
+    end
   end
+
 end
