@@ -9,12 +9,19 @@ alias Exon.Database
     GenServer.start_link(__MODULE__, :ok, name: Server)
   end
 
+  def init(:ok) do
+    Logger.info(IO.ANSI.green <> "Server started." <> IO.ANSI.reset)
+    io_device = File.open!("log/exon.log", [:append])
+    {:ok, io_device}
+  end
+
   def get_id(id), do: GenServer.call(Server, {:id, id})
   def new_item(name, comments, client), do: GenServer.call(Server, {:new_item, name, comments, client})
   def new_comment(id, comments), do: GenServer.call(Server, {:new_comment, id, comments}) 
-  def auth_user(credentials), do: GenServer.call(Server, {:auth, credentials})
+  def auth_user(credentials, client), do: GenServer.call(Server, {:auth, credentials, client})
   def del_item(:authed, id), do: GenServer.call(Server, {:del_item, id})
   def del_item(:non_authed, id) do
+    Logger.debug "Non authed!"
     m = %{status: :error,
       message: "Unauthorized action - User not logged in",
       data: id
@@ -30,16 +37,11 @@ alias Exon.Database
     m <> "\n"
   end
 
-  def init(:ok) do
-    Logger.info(IO.ANSI.green <> "Server started." <> IO.ANSI.reset)
-    io_device = File.open!("log/auth.log", [:append])
-    Agent.start(fn -> io_device end, name: :logfile)
-    {:ok, io_device}
-  end
-
-  def handle_call({:new_item, name, comments, client}, _from, state) do
+  def handle_call({:new_item, name, comments, client}, _from, device=state) do
     message = case Database.add_new_item(name, comments, client) do
       {:ok, id} ->
+        date = Ecto.DateTime.utc |> Ecto.DateTime.to_string
+        IO.puts device, "[#{date}] Item ##{id} \"#{name}\" registered by #{client.username}" <> if(client.host == "", do: "", else: " (#{client.host})")
         %{:status => :success,
           :message => "New item registered",
           :data => Integer.to_string(id)
@@ -77,12 +79,11 @@ alias Exon.Database
     {:reply, message <> "\n", state}
   end
 
-  def handle_call({:auth, credentials}, _from, state) do
-    device = Agent.get(:logfile, fn(x) -> x end)
+  def handle_call({:auth, credentials, client}, _from, device=state) do
     date = Ecto.DateTime.utc |> Ecto.DateTime.to_string
     result = case Aeacus.authenticate %{identity: credentials[:identity], password: credentials[:passwd]} do
       {:ok, user}       -> 
-        IO.puts(device, "[#{date}] Successful authentication for #{user.username}")
+        IO.puts device, "[#{date}] Successful authentication for #{user.username} (#{client.host})"
         Logger.debug "Sucessful authentication for " <> user.username
         msg = %{status: :success,
                 message: "Successful authentication",
@@ -96,7 +97,8 @@ alias Exon.Database
                 data: credentials[:identity]
               } |> Poison.encode!
 
-        IO.puts(device, "[#{date}] Failed login for #{credentials[:identity]}")
+        IO.puts device, "[#{date}] Failed login for #{credentials[:identity]} (#{client.host})"
+
         Logger.warn "Failed login for " <> credentials[:identity]
         {:error, error, msg}
     end

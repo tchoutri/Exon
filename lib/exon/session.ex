@@ -46,7 +46,7 @@ defmodule Exon.Session do
   def handle_cast({:parse_auth, info, client}, state) do
     updated_client = case parse(info) do
       {:ok, [username: username, passwd: password]} ->
-        case %{identity: username, passwd: password} |> Exon.Server.auth_user do
+        case %{identity: username, passwd: password} |> Exon.Server.auth_user(client) do
           {:ok, user, msg} ->
             Logger.debug(msg)
             GenServer.cast(self, {:send_pkt, msg})
