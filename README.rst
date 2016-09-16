@@ -37,6 +37,11 @@ Running the server.
 5. ???
 6. Enjoy.
 
+Logging
+~~~~~~~
+
+For the moment (16/09/2016), partial logging on disk is done, at `log/exon.log`. It contains the date + hour of the operation, the result (success/failure)
+and the client's username + hostname/IP address.
 
 What should be done
 ~~~~~~~~~~~~~~~~~~~
@@ -57,7 +62,6 @@ An authenticated user can register items with their name, and are able to remove
 
 TODO:
 
-* Returning the date & time of last time they logged in
 * In case of repetedly login failure, activate a timeout_ and a ban.
 
 
