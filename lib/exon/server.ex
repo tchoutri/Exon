@@ -41,7 +41,7 @@ alias Exon.Database
     message = case Database.add_new_item(name, comments, client) do
       {:ok, id} ->
         date = Ecto.DateTime.utc |> Ecto.DateTime.to_string
-        IO.puts device, "[#{date}] Item ##{id} \"#{name}\" registered by #{client.username}" <> if(client.host == "", do: "", else: " (#{client.host})")
+        IO.puts device, "[#{date}] Item ##{id} \"#{name}\" registered by #{client.username}" <> if(client.host == " (#{client.ip})", do: "", else: " (#{client.host})")
         %{:status => :success,
           :message => "New item registered",
           :data => Integer.to_string(id)
