@@ -13,7 +13,7 @@ defmodule Mix.Tasks.Exon.Seed do
 
 	record(:ok, "Thingster", "Lying around", "anon")
     # Let me dream!
-    record(:ok, "Photon cannon", "Hey listen, the feds might or might not be looking for this stuff, so… take care, hun!",
+    record(:ok, "Photon cannon", "Hey listen, the feds might or might not be looking for this stuff, so… take care, huh?!",
                 "Fred")
 
     add_new_user("Fred", "carabistouilles$8080")
