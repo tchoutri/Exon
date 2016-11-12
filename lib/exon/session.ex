@@ -2,7 +2,7 @@ defmodule Exon.Session do
 
   use GenServer
   require Logger
-  alias Exon.Client
+  alias Exon.Types.Client
 
   def start_link(socket) do
     GenServer.start_link(__MODULE__, socket, [])
