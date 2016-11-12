@@ -36,15 +36,6 @@ config :exon,
   port: 8878,
   bindto: '0.0.0.0'
 
-# Configure your database
-# config :exon, Exon.Repo.Items,
-#   adapter: Sqlite.Ecto,
-#   database: "priv/items.dev.sqlite3"
-
-# config :exon, Exon.Repo.Users,
-#   adapter: Sqlite.Ecto,
-#   database: "priv/users.dev.sqlite3"
-
 config :exon, Exon.Repo,
   adapter: Sqlite.Ecto,
   database: "priv/dev.sqlite3"
