@@ -1,9 +1,8 @@
 defmodule ExonTest do
   use ExUnit.Case, async: true
+  alias Exon.Types.{Message,Data}
 
-  alias Exon.User
   setup do
-    
      {:ok, socket} = :gen_tcp.connect({0,0,0,0,0,0,0,1}, 8878, [:binary, active: false])
      {:ok, [socket: socket]}
   end
@@ -25,15 +24,18 @@ defmodule ExonTest do
     :ok = :gen_tcp.send(socket, "id 324234\n")
 
     {:ok, json} = :gen_tcp.recv(socket, 0)
-    {:ok, response} = Poison.decode(json)
-    assert response == %{"data" => "324234", "message" => "Item not found.", "status" => "error"}
+    {:ok, response} = Poison.decode(json, as: %Message{})
+    assert response == %Message{message: "Item not found.",
+                                status: "error"}
   end
 
   test "Protocol Validation:\tAuthentication request", %{socket: socket} do
     :ok = :gen_tcp.send(socket, ~s(auth username="nixon"::passwd="hunter2"\n))
     {:ok, json} = :gen_tcp.recv(socket, 0)
-    {:ok, response} = Poison.decode(json)
+    {:ok, response} = Poison.decode(json, as: %Message{})
     assert response == %{"data" => "nixon", "message" => "Successful authentication", "status" => "success"}
+    assert response == %Message{message: "Successful authentication",
+                                status: "success"}
   end
 
   test "Protocol Validation:\tFailed authentication request", %{socket: socket} do

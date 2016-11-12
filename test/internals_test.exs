@@ -1,6 +1,7 @@
 defmodule InternalsTest do
   use ExUnit.Case, async: true
-  alias Exon.{Repo,User,Database,Client}
+  alias Exon.{Repo,User,Database}
+  alias Exon.Types.Client
 
   test "Internals:\tDeleting an item" do
     {:ok, response} = Exon.Server.new_item("Soon-to-be-removed-item", "nothing to say.", %Client{}) |> Poison.decode
