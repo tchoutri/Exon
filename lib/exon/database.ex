@@ -4,6 +4,7 @@ defmodule Exon.Database do
 use GenServer
 require Logger
 alias Exon.{Item,Repo,User}
+alias Exon.Types.{Message,Data}
 import Ecto.Query
 
   def start_link, do: GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
@@ -26,10 +27,12 @@ import Ecto.Query
   end
 
   def handle_call({:get_id, id}, _from, state) do
-    result = id
-             |> process_id
-             |> get_id_informations
-             |> parse_informations
+    result = with {:ok, new_id}      <- process_id(id),
+                  {:ok, item}        <- get_id_informations(new_id) do
+                    parse_informations({:ok, item})
+             else
+               err -> parse_informations(err)
+             end
     {:reply, result, state}
   end
 
@@ -75,7 +78,7 @@ import Ecto.Query
           {:ok, _model} <- Repo.update(changeset) do
            Logger.info "Successfully changed password for user #{username}"
     else
-      {:error, changeset} -> Logger.error "Could not change password for user #{username} : #{inspect changeset}"
+      {:error, changeset}  -> Logger.error "Could not change password for user #{username} : #{inspect changeset}"
       []                   -> Logger.error "User #{username} does not exist!"
     end
     {:reply, result, state}
@@ -100,11 +103,11 @@ import Ecto.Query
 # Backend API #
 ###############
 
-  defp get_id_informations({:error, :not_an_int}), do: {:error, :not_an_int}
+  @spec get_id_informations(integer()) :: {:ok, %Item{}} | {:not_found, integer()}
   defp get_id_informations(id) when is_integer(id) do
     query = from item in Item, where: item.id == ^id, select: item
     case Repo.all(query) do
-      [] -> {:error, :id_not_found, id}
+      []     -> {:not_found, id}
       [item] -> {:ok, item}
     end
   end
@@ -112,23 +115,28 @@ import Ecto.Query
   def record(:ok, name, comments, username) do
     name     = String.strip(name)  
     comments = String.strip(comments)
-
     {:ok, item} = Repo.insert(%Item{name: name, comments: comments, author: username})
-
     {:ok, item.id}
   end
 
   # regarde la pipeline ligne 31 avant de te demander pourquoi _name et _comments sont là.
   def record({:duplicate, id}, _name, _comments, _username), do: {:duplicate, id}
 
+  @spec check_duplicate(String.t) :: :ok | {:duplicate, integer()}
   defp check_duplicate(name) do
+    Logger.debug "Wondering if " <> inspect(name) <> " already exists…"
     query = from item in Item, where: item.name == ^name, select: item
     case Repo.all(query) do
-      [] -> :ok
-      [item] -> {:duplicate, item.id}
+      [] -> 
+        Logger.debug "Nope, doesn't."
+        :ok
+      [item] -> 
+        Logger.debug "Well, looks like it does."
+        {:duplicate, item.id}
     end
   end
 
+  @spec comment(integer(), String.t) :: {:ok, :added} | {:error, String.t}
   defp comment(id, new_comments) do
     query = from i in Item, where: i.id == ^id, select: i
     with [item] <- Repo.all(query),
@@ -141,37 +149,42 @@ import Ecto.Query
     end
   end
 
-  defp parse_informations({:ok, item}) do
+  @spec parse_informations({atom(), term()}) :: %Message{}
+  defp parse_informations({:ok, %Item{}=item}) do
     date = item.inserted_at |> Ecto.DateTime.to_string
-    %{:status => :success,
-      :message => "Item is available",
-      :data => %{
-        :author => item.author,
-        :name => item.name,
-        :id => Integer.to_string(item.id),
-        :date => date,
-        :comments => item.comments
-      }
-    }
+    %Message{status: :success,
+             message: "Item is available",
+             data: %Data{
+               author:    item.author,
+               name:      item.name,
+               id:        Integer.to_string(item.id),
+               date:      date,
+               comments:  item.comments
+             }
+          }
   end
 
-  defp parse_informations({:error, :id_not_found, id}) do
-    %{:status => :error,
-      :message => "Item not found.",
-      :data => Integer.to_string(id)
-    }
+  defp parse_informations({:not_found, id}) do
+    %Message{status:  :error,
+             message: "Item not found.",
+             data:    %Data{id: Integer.to_string(id)}
+            }
   end
 
   defp parse_informations({:error, :not_an_int}) do
-    %{status: :error,
-      message: "Not an integer.",
-      data: nil
+    %Message{status: :error,
+             message: "Not an integer.",
+             data: %Data{}
     }
   end
 
+  @spec process_id(String.t) :: {:ok, integer()} | {:error, :not_an_int}
   defp process_id(id) when is_binary(id) do
     try do
-      id |> String.strip |> String.to_integer
+      result = id
+        |> String.strip 
+        |> String.to_integer
+      {:ok, result}
     rescue 
       _error ->
         {:error, :not_an_int}
