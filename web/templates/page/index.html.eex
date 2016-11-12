@@ -1,9 +1,9 @@
-    <div class="container">
-
-      <div class="starter-template">
-        <h1>Exon mess manager</h1>
-        <p class="lead">
-          Organize and document your stuff lying around. <br />
-          <a href="/form" class="btn btn-success btn-lg" role="button">Let's go!</a>
-        </p>
-      </div>
+    <div class="inner cover">
+        <h1 class="cover-heading">Exon – A mess manager</h1>
+            <p class="lead">
+              Organize and document your stuff lying around.
+            </p>
+            <p class="lead">
+              <a href="/form" class="btn btn-success btn-lg" role="button">Let's go!</a>
+            </p>
+    </div>

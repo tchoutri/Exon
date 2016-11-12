@@ -18,8 +18,8 @@ defmodule Exon.Router do
 
     get "/", PageController, :index
     get "/about", PageController, :about
-    get "/item/:id", PageController, :id # *TODO* : This should not return raw JSON. Let's check it with the headesr.
-    get "/item/:id/qrcode", PageController, :qrcode
+    get "/item/:id", PageController, :id # *TODO* : This should *not* return raw JSON. Let's check it with the headesr.
+    get "/item/:id/qrcode.png", PageController, :qrcode
   end
 
   scope "/form", Exon do
