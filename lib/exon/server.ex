@@ -41,7 +41,7 @@ alias Exon.Database
     message = case Database.add_new_item(name, comments, client) do
       {:ok, id} ->
         date = Ecto.DateTime.utc |> Ecto.DateTime.to_string
-        IO.puts device, "[#{date}] Item ##{id} \"#{name}\" registered by #{client.username}" <> if(client.host == " (#{client.ip})", do: "", else: " (#{client.host})")
+        IO.puts device, "[#{date}] ADD ITEM ##{id} \"#{name}\" BY #{client.username}" <> if(client.host == " (#{client.ip})", do: "", else: " (#{client.host})")
         %{:status => :success,
           :message => "New item registered",
           :data => Integer.to_string(id)
@@ -83,7 +83,7 @@ alias Exon.Database
     date = Ecto.DateTime.utc |> Ecto.DateTime.to_string
     result = case Aeacus.authenticate %{identity: credentials[:identity], password: credentials[:passwd]} do
       {:ok, user}       -> 
-        IO.puts device, "[#{date}] Successful authentication for #{user.username} (#{client.host})"
+        IO.puts device, "[#{date}] LOGIN SUCESSFUL #{user.username} (#{client.host})"
         Logger.debug "Sucessful authentication for " <> user.username
         msg = %{status: :success,
                 message: "Successful authentication",
@@ -97,7 +97,7 @@ alias Exon.Database
                 data: credentials[:identity]
               } |> Poison.encode!
 
-        IO.puts device, "[#{date}] Failed login for #{credentials[:identity]} (#{client.host})"
+        IO.puts device, "[#{date}] LOGIN FAILED for #{credentials[:identity]} (#{client.host})"
 
         Logger.warn "Failed login for " <> credentials[:identity]
         {:error, error, msg}
