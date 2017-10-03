@@ -6,6 +6,6 @@ otp_release:
   - 20.0
 
 script:
-  - mkdir log
+  - mkdir -p log
   - mix compile
 
