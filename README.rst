@@ -27,7 +27,7 @@ Running the server.
 1. Edit the `config file` ) according to your needs.
 2. ``mix do deps.get, compile``
 3. ``mix ecto.migrate``
-4. ``iex -S mix`` or ``iex -S mix phoenix.server`` to enable the WebUI
+4. ``iex -S mix`` or ``iex -S mix phx.server`` to enable the WebUI
 5. ???
 6. Enjoy.
 
