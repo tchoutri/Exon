@@ -19,12 +19,6 @@ About the server
 .. image:: http://i.imgur.com/1yCKF0n.png
            :width: 33%
 
-.. image:: http://i.imgur.com/wHFpRC6.png
-           :width: 33%
-
-.. image:: http://i.imgur.com/0vEdDHE.png
-           :width: 33%
-
 Running the server.
 ~~~~~~~~~~~~~~~~~~~
 
