@@ -107,7 +107,7 @@ defmodule Exon.Database do
 
   @spec get_id_informations(integer()) :: {:ok, %Item{}} | {:not_found, integer()}
   defp get_id_informations(id) when is_integer(id) do
-    query = from item in Item, where: item.id == ^id, select: item
+    query = from item in Item, where: item.id == ^id, preload: [:user], select: item
     case Repo.all(query) do
       []     -> {:not_found, id}
       [item] -> {:ok, item}
@@ -137,11 +137,11 @@ defmodule Exon.Database do
   end
 
   defp parse_information({:ok, %Item{}=item}) do
-    date = item.inserted_at |> Ecto.DateTime.to_string
+    date = item.inserted_at |> NaiveDateTime.to_string
     %Message{status: :success,
             message: "Item is available",
             info: %Info{
-              username:  item.username,
+              username:  item.user.username,
               name:      item.name,
               id:        Integer.to_string(item.id),
               date:      date,

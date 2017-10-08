@@ -95,6 +95,10 @@ defmodule Exon.Session do
     {:noreply, state}
   end
 
+  def terminate(client) do
+    :gen_tcp.close(client.socket)
+  end
+
   defp handler(line, client) do
     Logger.debug line
     case sanitize_linebreaks(line) do
